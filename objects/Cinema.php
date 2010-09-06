@@ -2,6 +2,7 @@
 class Cinema {  
     public $name;  
     public $address;
+	public $state;
 	public $city;
     public $phone;  
     public $ticket;

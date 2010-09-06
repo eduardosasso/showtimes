@@ -20,7 +20,7 @@ class DrupalModel {
 	
 	public function update($cinemas){
 		foreach ($cinemas as $key => $cinema) {
-			$cinema_nid = get_cinema_nid($cinema);			
+			$cinema_nid = get_cinema_nid($cinema);
 
 			$city_tid = get_taxonomy_city_id($cinema->city);
 
@@ -130,12 +130,25 @@ class DrupalModel {
 		
 		$theater_nid = $this->get_theater_nid($theater_id);
 		
-		if (!empty($theater_nid)) {
-			return $theater_nid['nid'];
+		if (empty($theater_nid)) {
+			/*
+				TODO tem q notificar por email quando incluir um novo.
+			*/
+			$node = new StdClass();
+			$node->type = 'cinema';
+			$node->field_theater_id[0]['value'] = $theater_id;
+			$node->title = $cinema->name;
+			$node->body = $cinema->address;
+
+			$node->taxonomy = array($cinema->state, $cinema->city);
+			
+			node_save($node);
+			
+			return $node->nid;
+			
+		} else {
+			return $theater_nid;
 		}
-		/*
-			TODO aqui inclui o cinema, a classe tem q ter pais, estado, cidade...
-		*/
 	}
 	
 	private function get_movie_nid_by_name($movie_name) {
@@ -155,15 +168,9 @@ class DrupalModel {
 
 		if (empty($nid)) {
 			return;
+		} else {
+			return $nid;
 		}
-		$nome = $view->result['0']->node_title;
-
-		$theater = array();
-		$theater['nid'] = $nid;
-		$theater['nome'] = $nome;
-
-		//return $view->result['0']->nid;
-		return $theater;
 	}
 	
 	public function get_taxonomy_city_id($city){
