@@ -14,40 +14,37 @@ class DrupalModel {
 		
 		$_SERVER['REQUEST_METHOD'] = 'get';
 		$_SERVER['REMOTE_ADDR'] = '201.21.229.42';
-		//$_SERVER['HTTP_HOST'] = '';
 		drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 	}
 	
-	public function update($cinemas){
-		foreach ($cinemas as $key => $cinema) {
-			$cinema_nid = get_cinema_nid($cinema);
+	public function update($cinemas){		
+		//se tiver so 1 cinema encapsula em um array para o resto do codigo continuar funcionando
+		if (count($cinemas)) {
+			$cinemas_aux[] = $cinemas;
+ 		} else {
+			$cinemas_aux = $cinemas;
+		}
 
-			$city_tid = get_taxonomy_city_id($cinema->city);
+		foreach ($cinemas_aux as $key => $cinema) {
+			$cinema_nid = $this->get_cinema_nid($cinema);
 
-			delete_showtimes($cinema_nid);
+			$this->delete_showtimes($cinema_nid);
 			
-			foreach ($cinema->filmes as $key => $movie) {
-				$movie_nid = get_movie_nid($movie);
+			foreach ($cinema->movies as $key => $movie) {
+				$movie_nid = $this->get_movie_nid($movie);
 
 				$horario = new StdClass();
 				$horario->type = 'horario';
-				$horario->title = "$cinema->name  $cinema->city $movie->title $movie->language";
+				$horario->title = "$cinema->name  $cinema->city $movie->name $movie->language";
 				$horario->field_ref_filme[0]['nid'] = $movie_nid;
 				$horario->field_ref_cinema[0]['nid'] = $cinema_nid;
 				
-				foreach ($movie->horarios as $key => $showtime) {
+				foreach ($movie->showtimes as $key => $showtime) {
 					$horario->field_horario[]['value'] = $showtime;
 				}
-				echo '<pre>';
-				print_r($horario);
-				echo '</pre>';
-				//node_save($horario);
+				node_save($horario);
 			}
 		}
-
-		// print '<pre>';
-		// print_r(node_load(712509));
-		// print '</pre>';
 	}
 	
 	public function get_movie_nid($movie) {
@@ -134,13 +131,16 @@ class DrupalModel {
 			/*
 				TODO tem q notificar por email quando incluir um novo.
 			*/
+			$state_tid = $this->get_taxonomy_state_id($cinema->state);
+			$city_tid = $this->get_taxonomy_city_id($cinema->city);
+			
 			$node = new StdClass();
 			$node->type = 'cinema';
 			$node->field_theater_id[0]['value'] = $theater_id;
 			$node->title = $cinema->name;
 			$node->body = $cinema->address;
 
-			$node->taxonomy = array($cinema->state, $cinema->city);
+			$node->taxonomy = array($state_tid, $city_tid);
 			
 			node_save($node);
 			
@@ -171,6 +171,24 @@ class DrupalModel {
 		} else {
 			return $nid;
 		}
+	}
+	
+	function get_taxonomy_state_id($state){
+		$state_term = taxonomy_get_term_by_name($state);
+
+		if (count($state_term) == 0) {
+			$new_term = array();
+			$new_term['name'] = $state;
+			$new_term['vid'] = '5';
+			$new_term['parent'] = 0;
+			$new_term['weight'] = 0;
+
+			taxonomy_save_term($new_term);
+			$state_tid = $new_term['tid'];
+		} else {
+			$state_tid = $state_term[0]->tid;
+		}
+		return $state_tid;
 	}
 	
 	public function get_taxonomy_city_id($city){

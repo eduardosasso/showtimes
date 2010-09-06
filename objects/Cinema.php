@@ -4,7 +4,8 @@ class Cinema {
     public $address;
 	public $state;
 	public $city;
-    public $phone;  
+    public $phone;
+    public $site;
     public $ticket;
     public $details;  
 

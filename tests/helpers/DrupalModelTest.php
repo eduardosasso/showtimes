@@ -53,10 +53,17 @@ class DrupalModelTest extends PHPUnit_Framework_TestCase
 		// node_delete($movie_nid);
 
 		//teste completo recuperando ou criando um filme se necessario
-		$movie = $this->cinema->movies[0];
-		$movie->subtitle = 'dublado';
-		$movie_nid = $this->drupal->get_movie_nid($movie);
-		echo $movie_nid;
+		// $movie = $this->cinema->movies[0];
+		// $movie->subtitle = 'dublado';
+		// $movie_nid = $this->drupal->get_movie_nid($movie);
+		// echo $movie_nid;
+		
+		// $this->cinema->name = 'Cinema Presidente';
+		// $this->cinema->state = 'SP';
+		// $nid = $this->drupal->get_cinema_nid($this->cinema);
+		// echo $nid;
+
+		$this->drupal->update($this->cinema);
 		
 	}
 	
