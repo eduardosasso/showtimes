@@ -15,11 +15,16 @@ if (!empty($raw)) {
 	$headers = "From: $from";
 	mail($to,$subject,$message,$headers);
 	
-	error_log("tem conteudo", 0);
-	error_log($showtimes, 0);
+	// error_log("tem conteudo", 0);
+	// error_log($showtimes, 0);
 }
 
 echo $challenge;
 
+function unserialize_cinema($content){
+	$showtimes = unserialize($content);
+	echo $showtimes;
+	
+}
 
 ?>

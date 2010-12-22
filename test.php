@@ -35,7 +35,7 @@
 				 $dir_list[] = array("name" => $name, "url" => $url);
 			}
 		}
-		print_json($dir_list);
+			print_json($dir_list);
 	} else {
 		$classname = basename($query_path, '.json');
 		$object = new $classname;
