@@ -19,7 +19,7 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		$buffer = curl_exec($curl_handle);
 		curl_close($curl_handle);
 		
-    	$html = str_get_html($buffer);
+		$html = str_get_html($buffer);
 		
 		$theater = $html->find('h2', 0)->plaintext;
 		$address = $html->find('div[class="info"]',0)->plaintext;
@@ -27,7 +27,7 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		$cinema = new Cinema();
 		$cinema->name = $theater;
 		$cinema->address = $address;
-		$cinema->city = 'São Paulo';
+		$cinema->city = 'Rio de Janeiro';
 		
 		/*
 			TODO pegar a cidade por aqui tambem, ou permitir setar no filho
@@ -37,7 +37,7 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 			$filme = new Movie();
 			
 			$filme->name = $movie->find('.name a',0)->plaintext;
-			
+			$filme->subtitle = 'Legendado';
 			foreach($movie->find('.times a') as $showtime) {
 				$filme->set_showtime($showtime->plaintext);
 			}	
