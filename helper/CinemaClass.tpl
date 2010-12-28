@@ -1,5 +1,7 @@
 <?php
-	class %class {
+	include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
+	
+	class %class extends GoogleMoviesAdapter {
 		private $nome = "%nome";
 		private $id = "%id";
 		private $endereco = "%endereco";
@@ -10,7 +12,7 @@
 		private $long = "%long";
 		
 		public function get_url() {
-			return "%url"
+			return "%url";
 		}
 		
 	}

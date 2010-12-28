@@ -15,13 +15,36 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 		//sempre que um cinema for chamado, browser ou via polling cron atualizar seu status no couchdb.
 		//se no update executar e não tiver cinema remover do couchdb
 
-		$dir = "/cinema/br/sc/florianopolis/";
+		$cinemas_brx = Env::path('temp/brasil.json');		
+		$cinemas_brx = file_get_contents($cinemas_brx);
+		$cinemas_brx = json_decode($cinemas_brx);
 		
-		$template = new CinemaTemplate();
+		//teste santa catarina
+		$cinemas_br[] = $cinemas_brx[23];
 		
-		$arr = array("nome" => "GNC Iguatémi", "id" => "123", "endereco" => "endereco", "url" => "http://xxx");
+		//loop em todos os estados e cidades do estado
+		foreach ($cinemas_br as $value) {
+			$estado = $value->nome;
+			$uf = $value->codigo;
+			$cidades = $value->cidades;
+			
+			$cinema_finder = new CinemaFinder('br',$uf, $cidades);
+			$cinemas = $cinema_finder->get_all_cinemas();
+			
+			echo "<pre>";
+			print_r($cinemas);
+			echo "</pre>";
 
-		$template->create($dir, $arr);
+		}
+		
+		
+		// $dir = "/cinema/br/sc/florianopolis/";
+		// 
+		// $template = new CinemaTemplate();
+		// 
+		// $arr = array("nome" => "GNC Iguatémi", "id" => "123", "endereco" => "endereco", "url" => "http://www.google.com.br/movies?near=porto+alegre,+rs,+bra&tid=8731d7134e5b461a");
+		// 
+		// $template->create($dir, $arr);
 		
 		
 		// echo $file;
