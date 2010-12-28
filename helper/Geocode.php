@@ -3,9 +3,72 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 class Geocode {
 	private $geo_json;
+	private $location;
+	
+	private $city;
+	private $state = array();
+	private $country = array();	
 	
 	function __construct($address) {
-		$this->geo_json = $this->get($address);
+		try {
+			$this->geo_json = $this->get($address);
+			
+			$this->location = $this->geo_json->geometry->location;
+
+			$this->find_country_state_city();			
+		} catch (Exception $e) {
+			Log::write($e->getMessage() . " - " . $address);
+		}
+	}
+	
+	public function address(){
+		if ($this->geo_json) {
+			return $this->geo_json->formatted_address;
+		} else {
+			return;
+		}		
+	}
+	
+	public function lat() {
+		if ($this->location) {
+			$json = $this->location->lat;
+			return $json;
+		} else {
+			return;
+		}
+	}
+	
+	public function long() {
+		if ($this->location) {
+			$json = $this->location->lng;
+			return $json;
+		} else {
+			return;
+		}
+	}
+	
+	public function country(){
+		if ($this->country) {
+			return $this->country;
+		} else {
+			return;
+		}		
+	}	
+	
+	public function state(){
+		if ($this->state) {
+			return $this->state;
+		} else {
+			return;
+		}
+	}
+	
+	public function city() {
+		if ($this->city) {
+			return $this->city;
+		} else {
+			return;
+		}
 	}
 	
 	private function get($address){
@@ -23,16 +86,41 @@ class Geocode {
 		$buffer = curl_exec($curl_handle);
 		curl_close($curl_handle);
 		
-		/*
-			TODO testar retorno com erro
-		*/
 		$data = json_decode($buffer);
-		return $data;		
+		
+		if ($data->status != 'OK') {
+			throw new Exception($data->status);
+		} else {
+			return $data->results[0];			
+		}
+		
 	}
 	
-	public function lat() {
-		return $this->geo_json;
+	private function find_country_state_city(){
+		$json = $this->geo_json;
+		
+		foreach ($json->address_components as $key => $value) {
+			$country = array('country', 'political');
+			$state = array('administrative_area_level_1', 'political');
+			$city = array('locality', 'political');
+
+ 			if ($value->types == $country) {
+ 				$this->country = array("name" => $value->long_name, 'short' => $value->short_name);
+ 			}
+			
+			if ($value->types == $state) {
+				$this->state = array("name" => $value->long_name, 'short' => $value->short_name);
+			}
+			
+			if ($value->types == $city) {
+				$this->city = $value->long_name;
+			}			
+
+		}
+		
+		return $this->city;
 	}
+	
 }
 
 ?>

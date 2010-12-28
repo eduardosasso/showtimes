@@ -16,14 +16,14 @@ class CinemaTemplate{
 	private function new_template($dir, array $cinema) {
 		$class = Helper::clean_string($cinema['nome'], -1, '_');
 		$nome = $cinema['nome'];
-		$id = $cinema['id'];
 		$endereco = $cinema['endereco'];
 		$url = $cinema['url'];
-		$lat = '123';
-		$long = '456';
-		$cidade = 'Florianópolis';
-		$estado = 'Santa Catarina';
-		$uf = 'SC';
+		$id = Helper::get_url_param($url, 'tid');
+		$lat = $cinema['lat'];
+		$long = $cinema['long'];
+		$cidade = $cinema['cidade'];
+		$estado = $cinema['estado'];
+		$uf = $cinema['uf'];
 		
 		$file = $class . '.php';
 		

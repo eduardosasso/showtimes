@@ -20,7 +20,8 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 		$cinemas_brx = json_decode($cinemas_brx);
 		
 		//teste santa catarina
-		$cinemas_br[] = $cinemas_brx[23];
+		//$cinemas_br[] = $cinemas_brx[23];
+		$cinemas_br = $cinemas_brx;
 		
 		//loop em todos os estados e cidades do estado
 		foreach ($cinemas_br as $value) {
@@ -28,12 +29,36 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 			$uf = $value->codigo;
 			$cidades = $value->cidades;
 			
+			//so uma cidade para teste para ficar mais rapido
+			//$cidades = array('Florianópolis');
+			
 			$cinema_finder = new CinemaFinder('br',$uf, $cidades);
 			$cinemas = $cinema_finder->get_all_cinemas();
 			
-			echo "<pre>";
-			print_r($cinemas);
-			echo "</pre>";
+			$template = new CinemaTemplate();
+			
+			foreach ($cinemas as $cinema) {
+				$endereco =  $cinema['endereco'];
+				$geocode = new Geocode($endereco);
+				
+				$cinema['endereco'] = $geocode->address();
+				$cinema['lat'] = $geocode->lat();
+				$cinema['long'] = $geocode->long();
+				$cinema['cidade'] = $geocode->city();
+				
+				$cinema['uf'] = $uf;
+				$estado = $geocode->state();
+
+				if ($estado) {
+					$cinema['estado'] = $estado['name'];
+				} else {
+					$cinema['estado'] = '';
+				}
+				
+				$dir = "cinema/br/$uf/" . $geocode->city() . '/';
+				$dir = strtolower($dir);
+				$template->create($dir, $cinema);				
+			}
 
 		}
 		

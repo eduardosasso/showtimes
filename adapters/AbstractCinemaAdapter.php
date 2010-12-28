@@ -1,30 +1,34 @@
 <?php
-$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-
-require_once("$root/includes/phpQuery/phpQuery.php");
-require_once("$root/includes/simple_html_dom.php");
-
-require_once("$root/objects/Cinema.php");
-require_once("$root/objects/Movie.php");
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 abstract class AbstractCinemaAdapter {
 	
 	abstract protected function scrape();
 	
+	abstract protected function get_cinema();
+	
 	public function print_json(){
-		$time_begin = microtime(true);
-		
 		header("Content-type: application/json");
 		
-		$cinema = $this->scrape();
-		
-		$cinema->hash = md5(json_encode($cinema->movies));
+		try {
+			$cinema = @$this->scrape();
 
-		echo json_encode($cinema);
+			if (count($cinema->movies) == 0) {
+				$cinema->status = 'INVALID';
+				throw new Exception('Cinema não tem filmes');	
+			} else {
+				$cinema->status = 'OK';
+			}
+			
+			$cinema->hash = md5(json_encode($cinema->movies));
+
+		} catch (Exception $e) {
+			$cinema = array('status' => 'INVALID');
+			
+			Log::write($e->getMessage(), ' - ');
+		}
 		
-		// $time_end = microtime(true);
-		// 		$time_final = $time_end - $time_begin;
-		// 		error_log("tempo: $time_final");
+		echo json_encode($cinema);
 	}
 	
 	public function serialize_data(){

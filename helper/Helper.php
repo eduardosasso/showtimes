@@ -30,7 +30,21 @@ class Helper {
 
 		return $string;
 	}
+	
+	public static function get_url_param($url, $param) {
+		$parts = parse_url($url);
+		
+		if (isset($parts['query'])) {
+			$query = $parts['query'];
 
+			parse_str($query, $params);
+			
+			if (isset($params[$param])) {
+				return $params[$param];
+			}
+
+		}
+	}
 
 	public static function transliterate($string) {
 		static $i18n_loaded = false;

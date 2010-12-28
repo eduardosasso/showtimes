@@ -1,10 +1,9 @@
 <?php
-$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-require_once("$root/adapters/AbstractCinemaAdapter.php");
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 	abstract protected function get_url();
-	
+
 	public function scrape() {		
 		$cinema_url = $this->get_url();
 
@@ -18,38 +17,31 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
 		$buffer = curl_exec($curl_handle);
 		curl_close($curl_handle);
-		
+
 		$html = str_get_html($buffer);
-		
+
 		$theater = $html->find('h2', 0)->plaintext;
 		$address = $html->find('div[class="info"]',0)->plaintext;
 
-		$cinema = new Cinema();
-		$cinema->name = $theater;
-		$cinema->address = $address;
-		$cinema->city = 'Rio de Janeiro';
-		
-		/*
-			TODO pegar a cidade por aqui tambem, ou permitir setar no filho
-		*/
+		$cinema = $this->get_cinema();
 		
 		foreach($html->find('.movie') as $movie) {
 			$filme = new Movie();
-			
+
 			$filme->name = $movie->find('.name a',0)->plaintext;
 			$filme->subtitle = 'Legendado';
 			foreach($movie->find('.times a') as $showtime) {
 				$filme->set_showtime($showtime->plaintext);
 			}	
-			
+
 			$cinema->set_movie($filme);
 		}
 
-	    $html->clear();
-	    unset($html);
-	
+		$html->clear();
+		unset($html);
+
 		return $cinema;
-		
+
 	}	
 }
 

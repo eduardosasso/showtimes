@@ -8,8 +8,15 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		echo Helper::transliterate('ação áéúç áááá');
 	}
 
-	function test_clean_string(){
+	function xtest_clean_string(){
 		echo Helper::clean_string('GNC Iguatémi Porto Alegre');
+	}
+	
+	function test_parse_url() {
+		$url = "http://www.google.com.br?x=1&tid=2323&a=2";
+		$tid = Helper::get_url_param($url, 'tid');
+		echo "$tid";
+		
 	}
 
 	
