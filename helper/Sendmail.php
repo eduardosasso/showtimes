@@ -11,7 +11,7 @@ class Sendmail
 		$to = "eduardo.sasso@gmail.com";
 		
 		if (is_array($content)) {
-			$content = implode('\n\n', $content);
+			$content = implode(' <br> ', $content);
 		}
 		
 		self::send($from, $to, $subject, $content);

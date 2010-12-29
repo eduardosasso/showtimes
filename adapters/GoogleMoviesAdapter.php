@@ -30,6 +30,9 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 
 			$filme->name = $movie->find('.name a',0)->plaintext;
 			$filme->subtitle = 'Legendado';
+			/*
+				TODO esse loop tem q levar em consideracao filmes com ou sem link de horarios... BUG critico
+			*/
 			foreach($movie->find('.times a') as $showtime) {
 				$filme->set_showtime($showtime->plaintext);
 			}	

@@ -20,8 +20,8 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 		$cinemas_brx = json_decode($cinemas_brx);
 		
 		//teste santa catarina
-		//$cinemas_br[] = $cinemas_brx[23];
-		$cinemas_br = $cinemas_brx;
+		$cinemas_br[] = $cinemas_brx[23];
+		//$cinemas_br = $cinemas_brx;
 		
 		//loop em todos os estados e cidades do estado
 		foreach ($cinemas_br as $value) {
@@ -39,7 +39,7 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 			
 			foreach ($cinemas as $cinema) {
 				
-				$cidade_clean = Helper::clean_string($cinema->cidade);
+				$cidade_clean = Helper::clean_string($cinema->city);
 				
 				$dir = "cinema/br/$uf/" . $cidade_clean . '/';
 				$dir = strtolower($dir);

@@ -3,7 +3,7 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 class CinemaTemplate{
 
-	public function create($dir, array $cinema) {
+	public function create($dir, Cinema $cinema) {
 		//monta o path completo para o diretorio 
 		$path = Env::path($dir);
 
@@ -13,18 +13,20 @@ class CinemaTemplate{
 
 	}
 	
-	private function new_template($dir, array $cinema) {
-		$class = Helper::clean_string($cinema['nome'], -1, '_');
-		$nome = $cinema['nome'];
-		$endereco = $cinema['endereco'];
-		$telefone = $cinema['telefone'];
-		$url = $cinema['url'];
-		$id = cinema['id'];
-		$lat = $cinema['lat'];
-		$long = $cinema['long'];
-		$cidade = $cinema['cidade'];
-		$estado = $cinema['estado'];
-		$uf = $cinema['uf'];
+	private function new_template($dir, Cinema $cinema) {
+		$nome = $cinema->name;
+		
+		$class = Helper::clean_string($nome, -1, '_');
+
+		$endereco = $cinema->address;
+		$telefone = $cinema->phone;
+		$url = $cinema->url;
+		$id = $cinema->id;
+		$lat = $cinema->lat;
+		$long = $cinema->long;
+		$cidade = $cinema->city;
+		$estado = $cinema->state;
+		$uf = $cinema->state_code;
 		
 		$file = $class . '.php';
 		

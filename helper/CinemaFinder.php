@@ -17,6 +17,9 @@ class CinemaFinder {
 		foreach ($this->_cities as $key => $city) {
 			$this->get_cinemas_city($this->_state, $city);			
 		}
+		
+		$this->notify_invalid_cinemas();
+		
 		return $this->_cinemas;
 	}
 
@@ -48,8 +51,19 @@ class CinemaFinder {
 				
 				if (!$h2) {
 					//excecao: nome do cinema sem link, tem q ir direto no arquivo e adicionar o tid do google na url
-					$h2 = $div->find('h2',0);					
-					$h2->href = '';
+					$h2 = $div->find('h2',0);
+					
+					$first_movie_link = $div->find(".movie a",0);
+					$href = "http://www.google.com.br" . $first_movie_link->href;
+					$href = html_entity_decode($href);
+					
+					$nome = $h2->innertext;
+					$cinema_url = $this->find_cinema_url($href, $nome);
+					
+					Log::write($cinema_url . ' - ' . $href . ' - ' . $nome);
+					
+					$h2->href = $cinema_url;
+
 				}
 				
 				$nome = $h2->innertext;
@@ -58,9 +72,10 @@ class CinemaFinder {
 				
 				$endereco = strip_tags($div->find('.info',0)->innertext);
 				
-				$endereco_formatado = Helper::format_address($endereco)
-				$telefone = $endereco_formatado['phone'];
-				$endereco = $endereco_formatado['endereco'];
+				$endereco_formatado = Helper::format_address($endereco);
+				$telefone = $endereco_formatado->phone;
+				$endereco = $endereco_formatado->address;
+				
 				$id = Helper::get_url_param($url, 'tid');
 				
 				$cinema = new Cinema();
@@ -87,15 +102,40 @@ class CinemaFinder {
 		$html->clear();
 	}
 	
+	//filtra os cinemas que não tem ID do google para notificar por email no final do processo
 	private function notify_invalid_cinemas(){
-		$invalid[] = array_filter($this->_cinemas, function ($var) { return empty($var->id); } );
+		$invalid = array_filter($this->_cinemas, function ($var) { return empty($var->id); } );
 		
+		$cinemas = array();
 		foreach ($invalid as $key => $value) {
+			$uf = Helper::clean_string($value->state_code);
+			$cidade = Helper::clean_string($value->city);
+			$nome = Helper::clean_string($value->name);
 			
+			$cinema = "$uf/$cidade/$nome";
+			
+			$cinemas[] = $cinema;
+		}
+		
+		if (count($cinemas) > 0) {
+			Sendmail::to_admin("Cinemas Incompletos", $cinemas);
 		}
 
 	}
 	
+	private function find_cinema_url($url, $nome) {
+		//procura url do cinema se não achou na lista de cinema normal 
+		$buffer = Helper::http_req($url);
+		$html = str_get_html($buffer);
+		
+		$cinemas = $html->find('.showtimes .name a');
+		
+		foreach ($cinemas as $key => $cinema) {
+			if ($cinema->innertext == $nome) {
+				return $cinema->href;
+			}
+		}
+	}
 	
 	private function geo_cinema($cinema){
 		$endereco =  $cinema->address;
