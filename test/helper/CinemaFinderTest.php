@@ -55,7 +55,9 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 					$cinema['estado'] = '';
 				}
 				
-				$dir = "cinema/br/$uf/" . $geocode->city() . '/';
+				$cidade_clean = Helper::clean_string($geocode->city());
+				
+				$dir = "cinema/br/$uf/" . $cidade_clean . '/';
 				$dir = strtolower($dir);
 				$template->create($dir, $cinema);				
 			}

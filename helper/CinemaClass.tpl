@@ -8,6 +8,7 @@ class %class extends GoogleMoviesAdapter {
 		$cinema->id = "%id";
 		$cinema->name = "%nome";
 		$cinema->address = "%endereco";
+		$cinema->phone = "%telefone";
 		$cinema->state = "%estado";
 		$cinema->state_code = "%uf";
 		$cinema->city = "%cidade";

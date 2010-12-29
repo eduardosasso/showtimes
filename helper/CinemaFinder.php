@@ -20,6 +20,9 @@ class CinemaFinder {
 		return $this->_cinemas;
 	}
 
+	/*
+		TODO esse metodo devia retornar...
+	*/
 	public function get_cinemas_city($_state, $_city){
 		//recupera todos os cinemas de uma determinada cidade no google
 		$city = urlencode($_city . ' ' . $_state);
@@ -52,9 +55,15 @@ class CinemaFinder {
 				
 				$nome = $h2->innertext;
 				$url = "http://google.com.br" . $h2->href;
+				$url = html_entity_decode($url);
+				
 				$endereco = strip_tags($div->find('.info',0)->innertext);
+				
+				$endereco_formatado = Helper::format_address($endereco)
+				$telefone = $endereco_formatado['phone'];
+				$endereco = $endereco_formatado['endereco'];
 
-				$cinema = array("nome" => $nome, "endereco" => $endereco, "url" => $url);
+				$cinema = array("nome" => $nome, "endereco" => $endereco, "telefone" => $telefone, "url" => $url);
 				
 				//so incluir na lista de cinemas se ja não tiver um cinema com esse nome...
 				if (!in_array($nome, $this->_cinemas_tmp)) {

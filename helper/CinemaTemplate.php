@@ -17,6 +17,7 @@ class CinemaTemplate{
 		$class = Helper::clean_string($cinema['nome'], -1, '_');
 		$nome = $cinema['nome'];
 		$endereco = $cinema['endereco'];
+		$telefone = $cinema['telefone'];
 		$url = $cinema['url'];
 		$id = Helper::get_url_param($url, 'tid');
 		$lat = $cinema['lat'];
@@ -50,6 +51,7 @@ class CinemaTemplate{
 			$content = str_replace("%nome", $nome, $content);
 			$content = str_replace("%id", $id, $content);
 			$content = str_replace("%endereco", $endereco, $content);
+			$content = str_replace("%telefone", $telefone, $content);
 			$content = str_replace("%cidade", $cidade, $content);
 			$content = str_replace("%estado", $estado, $content);
 			$content = str_replace("%uf", $uf, $content);

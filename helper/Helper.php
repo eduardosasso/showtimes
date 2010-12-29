@@ -45,6 +45,24 @@ class Helper {
 
 		}
 	}
+	
+	public static function format_address($endereco) {
+		$pattern = '|\(0xx\)\(?\d{2}\)? ?\d{4}\-?\d{4}|';
+		
+		preg_match($pattern, $endereco, $matches);
+		
+		$endereco = preg_replace($pattern, '', $endereco);
+		
+		$telefone = '';
+		if (count($matches) == 1) {
+			$telefone = $matches[0];
+		}
+		
+		$endereco =  array("address" => $endereco, "phone" => $telefone);
+		
+		return $endereco;
+		
+	}
 
 	public static function transliterate($string) {
 		static $i18n_loaded = false;
