@@ -17,3 +17,9 @@ GatewayPorts yes - arquivo: /etc/ssh/sshd_config depois de salvar service sshd r
 
 * Executar na maquina local
 ssh -R 9999:showtimes.dev:80 -N -g root@refilmagem.com.br  
+
+Instalar Pear Mail
+------------------
+sudo pear install Mail-1.2.0
+sudo pear install Net_SMTP-1.4.4
+sudo pear install Mail_Mime-1.8.1

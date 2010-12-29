@@ -38,24 +38,8 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 			$template = new CinemaTemplate();
 			
 			foreach ($cinemas as $cinema) {
-				$endereco =  $cinema['endereco'];
-				$geocode = new Geocode($endereco);
 				
-				$cinema['endereco'] = $geocode->address();
-				$cinema['lat'] = $geocode->lat();
-				$cinema['long'] = $geocode->long();
-				$cinema['cidade'] = $geocode->city();
-				
-				$cinema['uf'] = $uf;
-				$estado = $geocode->state();
-
-				if ($estado) {
-					$cinema['estado'] = $estado['name'];
-				} else {
-					$cinema['estado'] = '';
-				}
-				
-				$cidade_clean = Helper::clean_string($geocode->city());
+				$cidade_clean = Helper::clean_string($cinema->cidade);
 				
 				$dir = "cinema/br/$uf/" . $cidade_clean . '/';
 				$dir = strtolower($dir);
@@ -63,7 +47,6 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 			}
 
 		}
-		
 		
 		// $dir = "/cinema/br/sc/florianopolis/";
 		// 

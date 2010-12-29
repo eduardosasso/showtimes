@@ -3,15 +3,16 @@ class Cinema {
 	public $id;
 	public $name;  
 	public $address;
+	public $phone;
 	public $lat;
 	public $long;
 	public $state;
 	public $state_code;
 	public $city;
-	public $phone;
 	public $site;
 	public $ticket;
 	public $details;  
+	public $url;  
 
 	public $movies = array(); 
 

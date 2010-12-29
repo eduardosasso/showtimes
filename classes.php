@@ -12,6 +12,7 @@
 	require_once("$root/helper/Helper.php");
 	require_once("$root/Env.php");
 	require_once("$root/helper/Log.php");
+	require_once("$root/helper/Sendmail.php");
 
 	require_once("$root/includes/simple_html_dom.php");
 	

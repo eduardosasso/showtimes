@@ -41,6 +41,16 @@ class Env {
 		
 	}
 	
+	public static function smtp(){
+		$smtp = new stdClass();
+		$smtp->host = "ssl://smtp.gmail.com";
+		$smtp->port = "465";
+		$smtp->username = "eduardo.sasso@gmail.com";
+		$smtp->password = "pasek1078";
+		
+		return $smtp;	
+	}
+	
 	public static function get_couchdb_url() {
 		$url = 'http://localhost:5984/';
 		

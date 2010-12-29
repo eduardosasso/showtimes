@@ -1,4 +1,5 @@
 <?php
+require_once "Mail.php";
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 //phpunit test/BasicTest.php
@@ -18,7 +19,7 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		echo "$tid";		
 	}
 	
-	function test_telefone(){
+	function xtest_telefone(){
 		//$endereco = 'R. Prof. Pedro Viriato Parigot de Souza, 600, Curitiba - PR, 81200-100 - (0xx)41 3317-6419';
 		$endereco = 'R. XV de Novembro, 8, Niterói - RJ, 24020-125';
 		
@@ -26,9 +27,45 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		
 		echo "<pre>";
 		print_r($endereco);
-		echo "</pre>";
+		echo "</pre>";		
+	}
+	
+	function validate($var){
+		return empty($var->id);
+	}
+	
+	
+	function test_invalid_cinemas(){
+		$cinema1 = new Cinema();
+		$cinema1->id = '';
+		$cinema1->name = "aaa";
+		$cinema1->address = "aaa";
+		
+		$cinema2 = new Cinema();
+		$cinema2->id = '123';
+		$cinema2->name = "bbb";
+		$cinema2->address = "bbb";
+		
+		$cinema3 = new Cinema();
+		$cinema3->id = '';
+		$cinema3->name = "bbb";
+		$cinema3->address = "bbb";
+		
+		$cinemas[] = $cinema1;
+		$cinemas[] = $cinema2;
+		$cinemas[] = $cinema3;
+		
+		$no_id[] = array_filter($cinemas, function ($var) { return empty($var->id); } );
 		
 	}
+	
+	function test_mail(){
+		$subject = 'teste';
+		$body = 'Teste de corpo <br> Proxima linha';
+		
+		Sendmail::to_admin($subject,$body);
+	}
+	
 	
 	function xtest_html_decode() {
 		$url = "http://google.com.br/movies?near=Barra+do+Pira%C3%AD+RJ&amp;tid=52ac29dc6228ec0";

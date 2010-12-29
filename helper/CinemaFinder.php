@@ -50,7 +50,6 @@ class CinemaFinder {
 					//excecao: nome do cinema sem link, tem q ir direto no arquivo e adicionar o tid do google na url
 					$h2 = $div->find('h2',0);					
 					$h2->href = '';
-					Log::write("Arrumar url do cinema " . $h2->innertext . " em " . $_city);
 				}
 				
 				$nome = $h2->innertext;
@@ -62,11 +61,19 @@ class CinemaFinder {
 				$endereco_formatado = Helper::format_address($endereco)
 				$telefone = $endereco_formatado['phone'];
 				$endereco = $endereco_formatado['endereco'];
-
-				$cinema = array("nome" => $nome, "endereco" => $endereco, "telefone" => $telefone, "url" => $url);
+				$id = Helper::get_url_param($url, 'tid');
+				
+				$cinema = new Cinema();
+				$cinema->id = $id;
+				$cinema->name = $nome;
+				$cinema->address = $endereco;
+				$cinema->phone = $telefone;
+				$cinema->url = $url; 
 				
 				//so incluir na lista de cinemas se ja não tiver um cinema com esse nome...
 				if (!in_array($nome, $this->_cinemas_tmp)) {
+					$cinema = $this->geo_cinema($cinema);
+					
 					$this->_cinemas_tmp[] = $nome;
 					$this->_cinemas[] = $cinema;
 				}
@@ -78,6 +85,39 @@ class CinemaFinder {
 
 		// clean up memory
 		$html->clear();
+	}
+	
+	private function notify_invalid_cinemas(){
+		$invalid[] = array_filter($this->_cinemas, function ($var) { return empty($var->id); } );
+		
+		foreach ($invalid as $key => $value) {
+			
+		}
+
+	}
+	
+	
+	private function geo_cinema($cinema){
+		$endereco =  $cinema->address;
+		$geocode = new Geocode($endereco);
+		
+		$cinema->address = $geocode->address();
+		$cinema->lat = $geocode->lat();
+		$cinema->long = $geocode->long();
+		$cinema->city = $geocode->city();
+
+		$estado = $geocode->state();
+		
+		if ($estado) {
+			$cinema->state = $estado['name'];
+			$cinema->state_code = $estado['short'];
+		} else {
+			$cinema->state = '';
+			$cinema->state_code = '';
+		}
+		
+		return $cinema;
 	}	
+	
 }
 ?>

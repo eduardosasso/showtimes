@@ -19,7 +19,7 @@ class CinemaTemplate{
 		$endereco = $cinema['endereco'];
 		$telefone = $cinema['telefone'];
 		$url = $cinema['url'];
-		$id = Helper::get_url_param($url, 'tid');
+		$id = cinema['id'];
 		$lat = $cinema['lat'];
 		$long = $cinema['long'];
 		$cidade = $cinema['cidade'];
@@ -30,6 +30,7 @@ class CinemaTemplate{
 		
 		$file = $dir . $file;
 
+		//se ja tem uma classe para o cinema descarta entao
 		if (!is_file($file)) {
 			
 			$tpl =  Env::path('helper/CinemaClass.tpl');
