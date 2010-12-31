@@ -60,8 +60,6 @@ class CinemaFinder {
 					$nome = $h2->innertext;
 					$cinema_url = $this->find_cinema_url($href, $nome);
 					
-					Log::write($cinema_url . ' - ' . $href . ' - ' . $nome);
-					
 					$h2->href = $cinema_url;
 
 				}
@@ -104,7 +102,12 @@ class CinemaFinder {
 	
 	//filtra os cinemas que não tem ID do google para notificar por email no final do processo
 	private function notify_invalid_cinemas(){
-		$invalid = array_filter($this->_cinemas, function ($var) { return empty($var->id); } );
+		if (count($this->_cinemas) == 0) {
+			Log::write("Não achou cinemas para " . $this->_state);
+			return;
+		}
+		
+		$invalid = array_filter($this->_cinemas, function ($var) { return empty($var->id) || empty($var->address);  } );
 		
 		$cinemas = array();
 		foreach ($invalid as $key => $value) {

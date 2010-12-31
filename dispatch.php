@@ -25,18 +25,24 @@
 				$dir_list[] = array("name" => $name, "url" => $url);
 			}
 		}
-		print_json($dir_list);
+		
+		Helper::print_json($dir_list);
+		
 	} else {
+		
 		$classname = basename($query_path, '.json');
+		
+		//procura a classe no json se encontrar retorna ela... bem mais rapido que IO
+		$db = DatabaseFactory::get_provider();
+		$data = $db->find($classname);
+		
+		// if ($data) {
+		// 	Helper::print_json($data);			
+		// 	return;			
+		// }
+		
 		$object = new $classname;
 		$object->print_json();
-	}
-	
-	
-	function print_json($data){
-		header("Content-type: application/json");
-
-		echo json_encode($data);
 	}
 			
 ?>

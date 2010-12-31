@@ -64,6 +64,7 @@ class CinemaTemplate{
 			
 			fwrite($handle, $content);
 			fclose($handle);
+
 		} 
 
 	}

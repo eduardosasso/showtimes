@@ -30,42 +30,42 @@ class Helper {
 
 		return $string;
 	}
-	
+
 	public static function get_url_param($url, $param) {
 		$parts = parse_url($url);
-		
+
 		if (isset($parts['query'])) {
 			$query = $parts['query'];
 
 			parse_str($query, $params);
-			
+
 			if (isset($params[$param])) {
 				return $params[$param];
 			}
 
 		}
 	}
-	
+
 	public static function format_address($endereco) {
 		$pattern = '|\(0xx\)\(?\d{2}\)? ?\d{4}\-?\d{4}|';
-		
+
 		preg_match($pattern, $endereco, $matches);
-		
+
 		$endereco = preg_replace($pattern, '', $endereco);
-		
+
 		$telefone = '';
 		if (count($matches) == 1) {
 			$telefone = $matches[0];
 		}
-		
+
 		$endereco_ =  new stdClass();
 		$endereco_->address = $endereco;
 		$endereco_->phone = $telefone;
-		
+
 		return $endereco_;
-		
+
 	}
-	
+
 	public static function http_req($url){
 		$curl_handle=curl_init();
 
@@ -93,6 +93,25 @@ class Helper {
 		}
 
 		return strtr($string, $translations);
+	}
+	
+	public static function print_json($data){
+		header("Content-type: application/json");
+
+		echo json_encode($data);		
+	}
+
+	public static function escape_special_char($id) {
+		//underscore é reservado para id, se vier simula um scape para gravar...
+		if (Helper::starts_with($id, '_')) {
+			return '/' . $id;
+		} else {
+			return $id;
+		}
+	}
+
+	public static function unescape_special_char($id) {
+		return str_replace('/_' , '_', $id);
 	}
 
 }
