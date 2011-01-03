@@ -4,6 +4,7 @@ class Env {
 	const LOCAL = 'showtimes.dev';
 	const PROD = 'showtimes.refilmagem.com.br';
 	const DEV = 'showtimes.refilmagem.com.br:9999';	
+	const URL_PATH = '/cinema/';	
 	
 	public static function is() {
 		if (isset($_SERVER["SERVER_NAME"])) {
@@ -25,6 +26,18 @@ class Env {
 				break;
 		}		
 		
+	}
+	
+	public static function url(){
+		return "http://" . Env::is();
+	}
+	
+	public static function url_path(){
+		return Env::URL_PATH;
+	}
+	
+	public static function cinema_url() {
+		return Env::url() . Env::url_path();
 	}
 	
 	public static function path($dir=''){
