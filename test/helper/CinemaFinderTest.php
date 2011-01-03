@@ -22,10 +22,38 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 				$updated[] = $url;
 			}
 		}
+	
+		$this->callback_subscribers($updated);
+
+		// echo "<pre>";
+		// print_r($updated);
+		// echo "</pre>";
+	}
+	
+	public function callback_subscribers($cinemas){
+		$cinemas_updated = base64_encode(json_encode($cinemas));
 		
-		echo "<pre>";
-		print_r($cinemas_updated);
-		echo "</pre>";
+		/*
+			TODO loop em todos os clientes recuperando a url de callback
+		*/
+		$url = "http://showtimes.dev/temp/callback.php";
+		
+		/*
+			TODO faz essa requisicao para todos os clientes registrados com callback
+		*/
+		//open connection
+		$ch = curl_init();
+
+		//set the url, number of POST vars, POST data
+		curl_setopt($ch,CURLOPT_URL,$url);
+		curl_setopt($ch,CURLOPT_POST,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array('cinemas'=>$cinemas_updated));
+
+		//execute post
+		$result = curl_exec($ch);
+
+		//close connection
+		curl_close($ch);
 	}
 
 	public function xxtest_find() {
