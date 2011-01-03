@@ -24,10 +24,6 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 		}
 	
 		$this->callback_subscribers($updated);
-
-		// echo "<pre>";
-		// print_r($updated);
-		// echo "</pre>";
 	}
 	
 	public function callback_subscribers($cinemas){
