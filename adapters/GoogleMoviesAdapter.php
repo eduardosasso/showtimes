@@ -29,9 +29,6 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 			$filme = new Movie();
 
 			$filme->name = $movie->find('.name a',0)->plaintext;
-			if (empty($filme->name)) {
-				$filme->name = $movie->find('.name',0)->plaintext;
-			}
 			
 			$meta = $movie->find('.info',0)->plaintext;
 			
@@ -40,8 +37,12 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 			/*
 				TODO esse loop tem q levar em consideracao filmes com ou sem link de horarios... BUG critico
 			*/
-			foreach($movie->find('.times a') as $showtime) {
-				$filme->set_showtime($showtime->plaintext);
+			
+			$showtimes = $movie->find('.times',0)->plaintext;
+			//$filme->set_showtime($showtimes);
+			$showtimes = explode("&nbsp; ", $showtimes);
+			foreach($showtimes as $showtime) {
+				$filme->set_showtime($showtime);
 			}	
 
 			$cinema->set_movie($filme);
