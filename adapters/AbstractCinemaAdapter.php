@@ -68,27 +68,31 @@ abstract class AbstractCinemaAdapter {
 		$db = DatabaseFactory::get_provider();
 
 		$cinema_db = $db->find($classname);
-
-		$cinema->updated = 'NO';
 		
 		if ($cinema_db) {
 			if ($cinema_db->hash != $cinema->hash) {
 				$cinema->_rev = $cinema_db->_rev;
-
-				$db->save($cinema);				
-
+							
+				//utilizado mais para ter uma nocao olhando direto no banco...
+				$cinema->updated = date('d/m/y H:i:s');
+			
+				$db->save($cinema);
+				
 				//atributo utilizado para filtrar cinemas que foram atualizados para notificar clientes de atualizacao uma unica vez.
+				//seta o valor temporariamente, não guarda no db, so para validacao
 				$cinema->updated = 'YES';
 
 				Log::write($cinema->name . ' tem novidades');
-				/*
-				TODO aqui deve chamar o callback com os clientes para notificar atualizacao
-				deve armazenar para chamar o callback uma unica vez com todas as atualizacoes
-				*/
 			}
 		} else {			
 			$db->save($cinema);
-		}		
+		}
+		
+		if (!isset($cinema->updated)) {
+			//controle so de validacao 
+			$cinema->updated = 'NO';
+		}
+				
 		return $cinema;		
 	}
 

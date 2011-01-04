@@ -35,6 +35,11 @@ class CouchDB implements DatabaseInterface {
 		}
 	}
 	
+	public function get_subscribers(){
+		$subscribers = $this->db->getView('subscribers','subscribers');
+		return $subscribers->rows;
+	}
+	
 	public function get_cinemas(){
 		$cinemas = $this->db->getView('cinemas','cinemas');
 		return $cinemas->rows;
