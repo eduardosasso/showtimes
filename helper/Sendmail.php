@@ -6,12 +6,16 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 class Sendmail
 {
-	function to_admin($subject, $content) {
+	public static function to_admin($subject, $content) {
 		$from = "eduardo.sasso@gmail.com";
 		$to = "eduardo.sasso@gmail.com";
 		
 		if (is_array($content)) {
+			if (count($content) == 0) return;
+			
 			$content = implode(' <br> ', $content);
+		} else {
+			if (empty($content)) return;
 		}
 		
 		self::send($from, $to, $subject, $content);

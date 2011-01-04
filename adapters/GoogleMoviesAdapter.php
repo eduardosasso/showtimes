@@ -29,7 +29,14 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 			$filme = new Movie();
 
 			$filme->name = $movie->find('.name a',0)->plaintext;
-			$filme->subtitle = 'Legendado';
+			if (empty($filme->name)) {
+				$filme->name = $movie->find('.name',0)->plaintext;
+			}
+			
+			$meta = $movie->find('.info',0)->plaintext;
+			
+			$this->set_movie_meta($meta, $filme);
+			
 			/*
 				TODO esse loop tem q levar em consideracao filmes com ou sem link de horarios... BUG critico
 			*/
@@ -44,8 +51,38 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		unset($html);
 
 		return $cinema;
-
 	}	
+	
+	private function set_movie_meta($meta, $filme) {
+		//limpa special chars ocultos
+		$meta = utf8_decode($meta);
+		$meta = str_replace('?', '', $meta);
+		$meta = utf8_encode($meta);
+
+		$meta = preg_split('/[-]+/',$meta);
+		
+		$meta = array_filter($meta,function ($var) {return empty($var) == false;});
+		
+		$lingua = end($meta);
+		array_pop($meta); 
+
+		$genero = end($meta);
+		array_pop($meta); 
+
+		$idade = end($meta);
+		array_pop($meta);
+
+		$tempo = end($meta);
+		array_pop($meta);
+		
+			
+		$lingua = ereg_replace("[^A-Za-z0-9]", "", $lingua); 		
+		$filme->subtitle = trim($lingua);
+		$filme->genre = trim($genero);
+		$filme->age = trim($idade);
+		$filme->time = trim($tempo);
+	}
+	
 }
 
 ?>

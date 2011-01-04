@@ -5,8 +5,67 @@ class Helper {
 		if($case){return (strcmp(substr($haystack, 0, strlen($needle)),$needle)===0);}
 		return (strcasecmp(substr($haystack, 0, strlen($needle)),$needle)===0);
 	}
+	
+	public static function recursive_file_exists($filename, $directory) {
+		try {
+			/*** loop through the files in directory ***/
+			foreach(new recursiveIteratorIterator( new recursiveDirectoryIterator($directory)) as $file){
+				/*** if the file is found ***/
+				if( $directory.'/'.$filename == $file )	{
+					return true;
+				}
+			}
+			/*** if the file is not found ***/
+			return false;
+		}	catch(Exception $e)	{
+			/*** if the directory does not exist or the directory
+			or a sub directory does not have sufficent
+			permissions return false ***/
+			return false;
+		}
+	}
 
-	function clean_string($string, $length = -1, $separator = '-') {
+	public static function nicetime($date) {
+		if(empty($date)) {
+			return "No date provided";
+		}
+
+		$periods         = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
+		$lengths         = array("60","60","24","7","4.35","12","10");
+
+		$now             = time();
+		$unix_date         = $date;
+
+		// check validity of date
+		if(empty($unix_date)) {    
+			return "Bad date";
+		}
+
+		// is it future date or past date
+		if($now > $unix_date) {    
+			$difference     = $now - $unix_date;
+			$tense         = "ago";
+
+		} else {
+			$difference     = $unix_date - $now;
+			$tense         = "from now";
+		}
+
+		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
+			$difference /= $lengths[$j];
+		}
+
+		$difference = round($difference);
+
+		if($difference != 1) {
+			$periods[$j].= "s";
+		}
+
+		return "$difference $periods[$j] {$tense}";
+	}
+	
+
+	public static function clean_string($string, $length = -1, $separator = '-') {
 		// transliterate
 		$string = Helper::transliterate($string);
 

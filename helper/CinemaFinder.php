@@ -85,8 +85,6 @@ class CinemaFinder {
 				
 				//so incluir na lista de cinemas se ja não tiver um cinema com esse nome...
 				if (!in_array($nome, $this->_cinemas_tmp)) {
-					$cinema = $this->geo_cinema($cinema);
-					
 					$this->_cinemas_tmp[] = $nome;
 					$this->_cinemas[] = $cinema;
 				}
@@ -120,9 +118,7 @@ class CinemaFinder {
 			$cinemas[] = $cinema;
 		}
 		
-		if (count($cinemas) > 0) {
-			Sendmail::to_admin("Cinemas Incompletos", $cinemas);
-		}
+		Sendmail::to_admin("Cinemas Incompletos", $cinemas);
 
 	}
 	
@@ -140,27 +136,7 @@ class CinemaFinder {
 		}
 	}
 	
-	private function geo_cinema($cinema){
-		$endereco =  $cinema->address;
-		$geocode = new Geocode($endereco);
 		
-		$cinema->address = $geocode->address();
-		$cinema->lat = $geocode->lat();
-		$cinema->long = $geocode->long();
-		$cinema->city = $geocode->city();
-
-		$estado = $geocode->state();
-		
-		if ($estado) {
-			$cinema->state = $estado['name'];
-			$cinema->state_code = $estado['short'];
-		} else {
-			$cinema->state = '';
-			$cinema->state_code = '';
-		}
-		
-		return $cinema;
-	}	
 	
 }
 ?>

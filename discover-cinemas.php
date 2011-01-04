@@ -1,8 +1,20 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
+//se o acesso é via web/curl pressupoe q é pelo cron entao roda...
+if (Env::is_http_req()) {
+	find_cinemas_brazil();
+}
+
+
 //cria ou atualiza cinemas de todo brazil
-function update_brazil(){
+function find_cinemas_brazil(){
+	$start = microtime(true);
+    
 	$cinemas_brx = Env::path('temp/brasil.json');		
 	$cinemas_brx = file_get_contents($cinemas_brx);
 	$cinemas_brx = json_decode($cinemas_brx);
@@ -12,6 +24,8 @@ function update_brazil(){
 	//$cinemas_br = $cinemas_brx;
 
 	//loop em todos os estados e cidades do estado
+	$new_cinemas = array();
+	
 	foreach ($cinemas_br as $value) {
 		$estado = $value->nome;
 		$uf = $value->codigo;
@@ -26,15 +40,20 @@ function update_brazil(){
 		$template = new CinemaTemplate();
 
 		foreach ($cinemas as $cinema) {
-
-			$cidade_clean = Helper::clean_string($cinema->city);
-
-			$dir = "cinema/br/$uf/" . $cidade_clean . '/';
-			$dir = strtolower($dir);
-			$template->create($dir, $cinema);				
-		}	
-	}	
-
+			$dir = "cinema/br/$uf/";
+			$base_dir = strtolower($dir);
+			$template->create($base_dir, $cinema);				
+		}
+		
+		$new_cinemas = array_merge($new_cinemas,$template->get_new_cinemas());	
+	}
+	
+	$total = Helper::nicetime($start);
+	
+	Log::write("Tempo total procurando cinemas: $total");
+			
+	Sendmail::to_admin("Cinemas novos", $new_cinemas);	
+	
 }
 
 

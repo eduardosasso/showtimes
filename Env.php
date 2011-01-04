@@ -28,6 +28,10 @@ class Env {
 		
 	}
 	
+	public static function is_http_req() {
+		return isset($_SERVER["SERVER_NAME"]);
+	}
+	
 	public static function url(){
 		return "http://" . Env::is();
 	}

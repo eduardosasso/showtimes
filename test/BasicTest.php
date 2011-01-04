@@ -5,6 +5,19 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 //phpunit test/BasicTest.php
 class BasicTest extends PHPUnit_Framework_TestCase {
 	
+	function test_replace() {
+		$file = Env::path() . 'cinema/br/rn/natal/cinemark_natal.php';
+		$x =str_replace(Env::path(), "", $file);
+		echo $x;
+	}
+	
+	function xtest_microtime(){
+		$start = "1294151968";
+		$end = "1294143742";
+//echo time();
+		echo Helper::nicetime($start);
+	}
+	
 	function xtest_transliterate(){
 		echo Helper::transliterate('ação áéúç áááá');
 	}
@@ -30,11 +43,11 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		echo "</pre>";		
 	}
 	
-	function validate($var){
+	function xvalidate($var){
 		return empty($var->id);
 	}
 	
-	function test_find_cinema() {
+	function xtest_find_cinema() {
 		//$url = 'http://www.google.com.br/movies?near=porto+alegre&mid=797b86a5ed990712';		
 		$url = 'http://www.google.com.br/movies?near=blumenau&mid=797b86a5ed990712';
 		

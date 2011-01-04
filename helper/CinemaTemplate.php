@@ -2,13 +2,16 @@
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 class CinemaTemplate{
-
+	private $new_cinemas = array();
+	
+	public function get_new_cinemas() {
+		return $this->new_cinemas;
+	}
+	
 	public function create($dir, Cinema $cinema) {
 		//monta o path completo para o diretorio 
 		$path = Env::path($dir);
 
-		$this->create_dir($path);
-		
 		$this->new_template($path, $cinema);
 
 	}
@@ -17,23 +20,30 @@ class CinemaTemplate{
 		$nome = $cinema->name;
 		
 		$class = Helper::clean_string($nome, -1, '_');
-
-		$endereco = $cinema->address;
-		$telefone = $cinema->phone;
-		$url = $cinema->url;
-		$id = $cinema->id;
-		$lat = $cinema->lat;
-		$long = $cinema->long;
-		$cidade = $cinema->city;
-		$estado = $cinema->state;
-		$uf = $cinema->state_code;
 		
 		$file = $class . '.php';
 		
-		$file = $dir . $file;
+		$tid = $cinema->id;
 
 		//se ja tem uma classe para o cinema descarta entao
-		if (!is_file($file)) {
+		//pesquisa classe com mesmo nome recursivo a partir do diretorio do estado...
+		//if (!is_file($file)) {
+		if (!Helper::recursive_file_exists($file, $dir)) {
+			
+			$cinema = $this->geo_cinema($cinema);
+
+			$endereco = $cinema->address;
+			$telefone = $cinema->phone;
+			$url = $cinema->url;
+			$lat = $cinema->lat;
+			$long = $cinema->long;
+			$cidade = $cinema->city;
+			$estado = $cinema->state;
+			$uf = $cinema->state_code;
+			
+			//se não achou o cinema cria a estrutura de dir correta para ele cinema/uf/cidade 
+			$path = $dir . Helper::clean_string($cinema->city);
+			$this->create_dir($path);
 			
 			$tpl =  Env::path('helper/CinemaClass.tpl');
 			if (!is_file($tpl)) {
@@ -41,6 +51,8 @@ class CinemaTemplate{
 				exit(1);
 			} 
 			
+			//a classe do cinema fica sempre em cinema/uf/cidade/file.php
+			$file = $path . '/' . $file;
 			$handle = fopen($file, 'w');
 			
 			if ($handle == false) {
@@ -52,7 +64,7 @@ class CinemaTemplate{
 			
 			$content = str_replace("%class", $class, $cinema_class);
 			$content = str_replace("%nome", $nome, $content);
-			$content = str_replace("%id", $id, $content);
+			$content = str_replace("%id", $tid, $content);
 			$content = str_replace("%endereco", $endereco, $content);
 			$content = str_replace("%telefone", $telefone, $content);
 			$content = str_replace("%cidade", $cidade, $content);
@@ -64,6 +76,9 @@ class CinemaTemplate{
 			
 			fwrite($handle, $content);
 			fclose($handle);
+			
+			//guarda todos os novos cinemas criados para depois notificar via email para o admin controlar...
+			$this->new_cinemas[] = str_replace(Env::path(), "", $file);
 
 		} 
 
@@ -80,6 +95,28 @@ class CinemaTemplate{
 			}
 		}		
 	}	
+	
+	private function geo_cinema($cinema){
+		$endereco =  $cinema->address;
+		$geocode = new Geocode($endereco);
+		
+		$cinema->address = $geocode->address();
+		$cinema->lat = $geocode->lat();
+		$cinema->long = $geocode->long();
+		$cinema->city = $geocode->city();
+
+		$estado = $geocode->state();
+		
+		if ($estado) {
+			$cinema->state = $estado['name'];
+			$cinema->state_code = $estado['short'];
+		} else {
+			$cinema->state = '';
+			$cinema->state_code = '';
+		}
+		
+		return $cinema;
+	}
 
 }
 

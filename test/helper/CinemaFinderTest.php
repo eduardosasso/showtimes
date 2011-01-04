@@ -1,66 +1,15 @@
 <?php 
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
-include realpath($_SERVER["DOCUMENT_ROOT"]) . '/update.php';
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/update-showtimes.php';
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/discover-cinemas.php';
 
 //phpunit test/helper/CinemaFinderTest.php
 class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 	public function test_update(){
-		$db = DatabaseFactory::get_provider();
-
-		$cinemas = $db->get_cinemas();
-
-		$updated = array();
 		
-		foreach ($cinemas as $key => $value) {
-			$classname = $value->id;
-			
-			$cinema = new $classname;
-			
-			$url = $cinema->update();
-			
-			if (!empty($url)) {
-				$updated[] = $url;
-			}
-		}
-	
-		if (count($updated) > 0) {
-			$this->callback_subscribers($updated);
-		}
 		
 	}
 	
-	public function callback_subscribers($cinemas){
-		$cinemas_updated = base64_encode(json_encode($cinemas));
-		
-		$db = DatabaseFactory::get_provider();
-
-		$subscribers = $db->get_subscribers();
-		
-		foreach ($subscribers as $subscriber) {
-			$url = $subscriber->value->callback;
-			
-			$this->post_request($url, $cinemas_updated);
-		}		
-		
-	}
-	
-	private function post_request($url, $data) {
-		/*
-			TODO faz essa requisicao para todos os clientes registrados com callback
-		*/
-		$ch = curl_init();
-
-		//set the url, number of POST vars, POST data
-		curl_setopt($ch,CURLOPT_URL,$url);
-		curl_setopt($ch,CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array('data'=>$data));
-
-		//execute post
-		$result = curl_exec($ch);
-
-		//close connection
-		curl_close($ch);		
-	}
 
 	public function xxtest_find() {
 
@@ -74,7 +23,7 @@ class CinemaFinderTest extends PHPUnit_Framework_TestCase {
 		//sempre que um cinema for chamado, browser ou via polling cron atualizar seu status no couchdb.
 		//se no update executar e não tiver cinema remover do couchdb
 
-		update_brazil();
+		
 
 		// $dir = "/cinema/br/sc/florianopolis/";
 		// 
