@@ -28,9 +28,9 @@ class CouchDB implements DatabaseInterface {
 	public function clean_database() {
 		$all_or_nothing = true;
 		
-		$placemarks = $this->db->getView('placemark','placemarks');
+		$cinemas = $this->db->getView('cinemas','cinemas');
 		
-		foreach ($placemarks->rows as $row ) {
+		foreach ($cinemas->rows as $row ) {
 			$this->db->deleteDoc($row->value);
 		}
 	}

@@ -22,22 +22,14 @@ function update_showtimes(){
 	$updated = array();
 	
 	$erros = array();
-	
-	$cinemas_aux = $cinemas;
-	$cinemas = array();
-	$cinemas[] = $cinemas_aux[0];
-	$cinemas[] = $cinemas_aux[1];
-	$cinemas[] = $cinemas_aux[2];
-	$cinemas[] = $cinemas_aux[3];
-	
+
 	foreach ($cinemas as $value) {
-		//$classname = $value->id;
 		$classname = basename($value, '.php');
 
 		try {
 			if (class_exists($classname)) {
-				$cinema_class = new $classname;
-				$cinema = $cinema_class->update();
+				 $cinema_class = new $classname;
+				 $cinema = $cinema_class->update();
 
 				if (!empty($cinema)) {
 					$updated[] = $cinema;
@@ -47,18 +39,20 @@ function update_showtimes(){
 		} catch (Exception $e) {
 			$erros[] = $classname . ' - ' . $e->getMessage();
 		}
+
 	}
 
 	if (count($updated) > 0) {
 		callback_subscribers($updated);
 		
-		Sendmail::to_admin(count($updated) . " cinemas atualizados", $updated);	
-		
+		Sendmail::to_admin(count($updated) . " cinemas atualizados", $updated);			
 	}
 	
 	Sendmail::to_admin(count($erros) . " erros atualizando cinemas", $erros);	
 	
 	$total = Helper::elapsed_time($start);
+	
+	echo $classname . "\n";
 	
 	Log::write("Tempo total atualizando cinemas: $total");	
 }

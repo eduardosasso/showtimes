@@ -42,17 +42,25 @@ class Helper {
 	}
 
 	public static function elapsed_time($unixtime) {
-		$timeline = time()-$unixtime;
+		$secs = time()-$unixtime;
 		
-		$periods = array('hour' => 3600, 'minute' => 60, 'second' => 1);
-		$ret = '';
-		foreach($periods AS $name => $seconds){
-			$num = floor($timeline / $seconds);
-			$timeline -= ($num * $seconds);
-			$ret .= $num.' '.$name.(($num > 1) ? 's' : '').' ';
-		}
+		$vals = array('w' => (int) ($secs / 86400 / 7), 
+			'd' => $secs / 86400 % 7, 
+			'h' => $secs / 3600 % 24, 
+			'm' => $secs / 60 % 60, 
+			's' => $secs % 60); 
 
-		return trim($ret);
+		$ret = array(); 
+
+		$added = false; 
+		foreach ($vals as $k => $v) { 
+			if ($v > 0 || $added) { 
+				$added = true; 
+				$ret[] = $v . $k; 
+			} 
+		} 
+
+		return join(' ', $ret);
 	}
 
 	public static function clean_string($string, $length = -1, $separator = '-') {

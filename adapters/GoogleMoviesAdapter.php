@@ -6,6 +6,8 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 
 	public function scrape() {		
 		$cinema_url = $this->get_url();
+		
+		$cinema = $this->get_cinema();
 
 		$curl_handle=curl_init();
 
@@ -23,12 +25,11 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		$theater = $html->find('h2', 0)->plaintext;
 		
 		if (empty($theater)) {
-			throw new Exception('Nao encontrou dados para o cinema na url:' . $cinema_url);
+			Log::write('Nao encontrou dados para o cinema na url:' . $cinema_url);
+			return $cinema;			
 		}
 		
 		$address = $html->find('div[class="info"]',0)->plaintext;
-
-		$cinema = $this->get_cinema();
 		
 		foreach($html->find('.movie') as $movie) {
 			$filme = new Movie();

@@ -32,8 +32,9 @@ class CinemaTemplate{
 
 		//se ja tem uma classe para o cinema descarta entao
 		//pesquisa classe com mesmo nome recursivo a partir do diretorio do estado...
-		//if (!is_file($file)) {
 		if (!Helper::recursive_file_exists($file, $dir)) {
+			
+			$temp_uf = $cinema->state_code;
 			
 			$cinema = $this->geo_cinema($cinema);
 
@@ -46,8 +47,19 @@ class CinemaTemplate{
 			$estado = $cinema->state;
 			$uf = $cinema->state_code;
 			
-			//se não achou o cinema cria a estrutura de dir correta para ele cinema/uf/cidade 
-			$path = $dir . Helper::clean_string($cinema->city);
+			//esse if deve evitar o compartamente do google de procurar cinemas proximos tipo colocar volta redonda dentro de sp
+			if (empty($uf)) {
+				//se caiu aqui é pq o geocode do endereco do cine falhou entao usa a uf temp pelo menos para colocar o cine no dir correto
+				$uf = $temp_uf;
+				$path = $dir . $uf . '/';
+			} else {
+				//bug do google maps
+				if (Helper::clean_string($uf) == 'sao-paulo') $uf = 'SP';
+				
+				$path = $dir . $uf . '/' . Helper::clean_string($cinema->city);
+			}
+			$path = strtolower($path);
+			
 			$this->create_dir($path);
 			
 			$tpl =  Env::path('helper/CinemaClass.tpl');

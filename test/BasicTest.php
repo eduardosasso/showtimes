@@ -27,8 +27,14 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		$x =str_replace(Env::path(), "", $file);
 		echo $x;
 	}
+	function test_clean_database(){
+		$db = DatabaseFactory::get_provider();
+
+		$db->clean_database();
+
+	}
 	
-	function test_get_file_list(){
+	function xtest_get_file_list(){
 		$path = Env::path() . 'cinema/br';
 		$files = Helper::get_file_list($path);
 		
@@ -50,7 +56,7 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function xtest_clean_string(){
-		echo Helper::clean_string('GNC Iguatémi Porto Alegre');
+		echo Helper::clean_string('São Paulo');
 	}
 	
 	function xtest_parse_url() {

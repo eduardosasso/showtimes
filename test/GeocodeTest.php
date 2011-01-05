@@ -5,13 +5,13 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 class GeocodeTest extends PHPUnit_Framework_TestCase {
 	
 	function test_all(){
-		$address = "Saisudo, 6580 - Brasília - DF, 71219-900";
+		$address = "Av. Mal. Floriano Peixoto, 44 - Gonzaga, Santos - São Paulo, 11060-300, Brazil";
 		//$address = "sd;lksdl;skdl;skd";
 		$geocode = new Geocode($address);
 		$lat = $geocode->address();
 		
 		echo "<pre>";
-		print_r($lat);
+		print_r($geocode->state());
 		echo "</pre>";
 		
 	}

@@ -73,15 +73,6 @@ abstract class AbstractCinemaAdapter {
 		$cinema_db = $db->find($classname);
 
 		if ($cinema_db) {
-			if ($cinema->status == 'INVALID') {
-				//se caiu aqui mantem os dados do banco e so limpa os horarios...
-				//esse caso é quando o cinema ou não tem horarios ou deu algum outro erro qualquer...
-				$cinema = clone $cinema_db;
-				//define um hash qualquer so para forcar a atualizacao no couch..
-				$cinema->hash = md5(time());
-				$cinema->status = 'INVALID';
-				$cinema->movies = '';
-			}
 			if ($cinema_db->hash != $cinema->hash) {
 				$cinema->_rev = $cinema_db->_rev;
 
@@ -97,10 +88,11 @@ abstract class AbstractCinemaAdapter {
 				//Log::write($cinema->name . ' tem novidades');
 			}			
 		} else {			
+			$cinema->updated = 'YES';
 			//se não tem o cinema no banco e ele ta OK entao grava, senao espera para quando tiver ok para gravar e notificar.
 			if ($cinema->status == 'OK') {
-				$db->save($cinema);
-				$cinema->updated = 'YES';				
+				//se é a primeira vez e esta ok vai pro banco
+				$db->save($cinema);				
 			} 
 		}
 
