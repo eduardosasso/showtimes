@@ -10,15 +10,9 @@ class Sendmail
 		$from = "eduardo.sasso@gmail.com";
 		$to = "eduardo.sasso@gmail.com";
 		
-		if (is_array($content)) {
-			if (count($content) == 0) return;
-			
-			$content = implode(' <br> ', $content);
-		} else {
-			if (empty($content)) return;
-		}
+		if (empty($content)) return;
 		
-		self::send($from, $to, $subject, $content);
+		self::send($from, $to, $subject, '<pre>'. print_r($content, true) . '</pre>');
 	}
 
 	private static function send($from, $to, $subject, $body) {

@@ -1,6 +1,8 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
+set_time_limit(0);
+
 //testa se o acesso veio atraves de requisicao web/curl se sim roda a atualizacao...
 //senao é pq deve ser teste via phpunit ou alguma chamada direta
 if (Env::is_http_req()) {
@@ -8,28 +10,57 @@ if (Env::is_http_req()) {
 }
 
 function update_showtimes(){
-	$db = DatabaseFactory::get_provider();
-
-	$cinemas = $db->get_cinemas();
+	// $db = DatabaseFactory::get_provider();
+	// 
+	// $cinemas = $db->get_cinemas();
+	
+	$start = microtime(true);
+	
+	$path = Env::path() . 'cinema/br';
+	$cinemas = Helper::get_file_list($path);
 
 	$updated = array();
 	
-	foreach ($cinemas as $key => $value) {
-		$classname = $value->id;
-		
-		$cinema = new $classname;
-		
-		$url = $cinema->update();
-		
-		if (!empty($url)) {
-			$updated[] = $url;
+	$erros = array();
+	
+	$cinemas_aux = $cinemas;
+	$cinemas = array();
+	$cinemas[] = $cinemas_aux[0];
+	$cinemas[] = $cinemas_aux[1];
+	$cinemas[] = $cinemas_aux[2];
+	$cinemas[] = $cinemas_aux[3];
+	
+	foreach ($cinemas as $value) {
+		//$classname = $value->id;
+		$classname = basename($value, '.php');
+
+		try {
+			if (class_exists($classname)) {
+				$cinema_class = new $classname;
+				$cinema = $cinema_class->update();
+
+				if (!empty($cinema)) {
+					$updated[] = $cinema;
+				}
+	
+			}			
+		} catch (Exception $e) {
+			$erros[] = $classname . ' - ' . $e->getMessage();
 		}
 	}
 
 	if (count($updated) > 0) {
 		callback_subscribers($updated);
+		
+		Sendmail::to_admin(count($updated) . " cinemas atualizados", $updated);	
+		
 	}
 	
+	Sendmail::to_admin(count($erros) . " erros atualizando cinemas", $erros);	
+	
+	$total = Helper::elapsed_time($start);
+	
+	Log::write("Tempo total atualizando cinemas: $total");	
 }
 
 function callback_subscribers($cinemas){

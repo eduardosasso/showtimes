@@ -23,3 +23,8 @@ Instalar Pear Mail
 sudo pear install Mail-1.2.0
 sudo pear install Net_SMTP-1.4.4
 sudo pear install Mail_Mime-1.8.1
+
+Cron
+----
+curl http://showtimes.dev/cron/discover-cinemas.php
+curl http://showtimes.dev/cron/update-showtimes.php

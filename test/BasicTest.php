@@ -2,20 +2,47 @@
 require_once "Mail.php";
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
+
 //phpunit test/BasicTest.php
 class BasicTest extends PHPUnit_Framework_TestCase {
 	
-	function test_replace() {
+	function xtest_dir() {
+		$filename = "patio_brasil.php";
+		$path = Env::path("cinema/br/df/");
+		//echo $path;
+		
+		if (Helper::recursive_file_exists($filename, $path)) {
+			echo "achou";
+		} else {
+			echo "não achou";
+		}
+		
+	}
+	function xtest_replace() {
 		$file = Env::path() . 'cinema/br/rn/natal/cinemark_natal.php';
 		$x =str_replace(Env::path(), "", $file);
 		echo $x;
 	}
 	
+	function test_get_file_list(){
+		$path = Env::path() . 'cinema/br';
+		$files = Helper::get_file_list($path);
+		
+		echo "<pre>";
+		print_r($files);
+		echo "</pre>";
+		
+	}
+	
 	function xtest_microtime(){
-		$start = "1294151968";
+		$start = "1294229146";
 		$end = "1294143742";
 //echo time();
-		echo Helper::nicetime($start);
+		echo Helper::elapsed_time($start);
 	}
 	
 	function xtest_transliterate(){

@@ -3,9 +3,14 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 class CinemaTemplate{
 	private $new_cinemas = array();
+	private $invalid_cinemas = array();
 	
 	public function get_new_cinemas() {
 		return $this->new_cinemas;
+	}
+	
+	public function get_invalid_cinemas() {
+		return $this->invalid_cinemas;
 	}
 	
 	public function create($dir, Cinema $cinema) {
@@ -78,8 +83,14 @@ class CinemaTemplate{
 			fclose($handle);
 			
 			//guarda todos os novos cinemas criados para depois notificar via email para o admin controlar...
-			$this->new_cinemas[] = str_replace(Env::path(), "", $file);
-
+			//se não achou a cidade do cinema via geolocation vai colocar em um lugar errado, entao tem q notificar...
+			$cinema_path = str_replace(Env::path(), "", $file);
+			if (empty($cidade)) {
+				$this->invalid_cinemas[] = $cinema_path;
+			} else{
+				$this->new_cinemas[] = $cinema_path;
+			}
+			
 		} 
 
 	}

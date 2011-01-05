@@ -12,17 +12,15 @@ abstract class AbstractCinemaAdapter {
 			$cinema = @$this->scrape();
 
 			if (count($cinema->movies) == 0) {
-				$cinema->status = 'INVALID';
-				throw new Exception('Cinema não tem filmes');	
+				throw new Exception($cinema->name . ' não tem filmes');	
+			} elseif (empty($cinema->city)) {
+				throw new Exception($cinema->name . ' com endereço inválido ainda.');					
 			} else {
 				$cinema->status = 'OK';
+				$cinema->hash = md5(json_encode($cinema->movies));
 			}
-
-			$cinema->hash = md5(json_encode($cinema->movies));
-
 		} catch (Exception $e) {
-			$cinema = array('status' => 'INVALID');
-
+			$cinema->status = 'INVALID';
 			Log::write($e->getMessage(), ' - ');
 		}
 
@@ -44,10 +42,15 @@ abstract class AbstractCinemaAdapter {
 			$name = $json->_id;
 			$city = Helper::clean_string($json->city);
 			$state = strtolower($json->state_code);
-
+			
 			$url = Env::cinema_url() . $state . '/' . $city . '/' . $name;
+			
+			//retorna a url para acesso e o status assim o cliente pode testar o status antes de fazer uma requisicao.
+			$cinema = new stdClass();
+			$cinema->url = $url;
+			$cinema->status = $json->status;
 
-			return $url;
+			return $cinema;
 		}
 	}
 
@@ -68,31 +71,44 @@ abstract class AbstractCinemaAdapter {
 		$db = DatabaseFactory::get_provider();
 
 		$cinema_db = $db->find($classname);
-		
+
 		if ($cinema_db) {
+			if ($cinema->status == 'INVALID') {
+				//se caiu aqui mantem os dados do banco e so limpa os horarios...
+				//esse caso é quando o cinema ou não tem horarios ou deu algum outro erro qualquer...
+				$cinema = clone $cinema_db;
+				//define um hash qualquer so para forcar a atualizacao no couch..
+				$cinema->hash = md5(time());
+				$cinema->status = 'INVALID';
+				$cinema->movies = '';
+			}
 			if ($cinema_db->hash != $cinema->hash) {
 				$cinema->_rev = $cinema_db->_rev;
-							
+
 				//utilizado mais para ter uma nocao olhando direto no banco...
 				$cinema->updated = date('d/m/y H:i:s');
-			
+
 				$db->save($cinema);
-				
+
 				//atributo utilizado para filtrar cinemas que foram atualizados para notificar clientes de atualizacao uma unica vez.
 				//seta o valor temporariamente, não guarda no db, so para validacao
 				$cinema->updated = 'YES';
 
-				Log::write($cinema->name . ' tem novidades');
-			}
+				//Log::write($cinema->name . ' tem novidades');
+			}			
 		} else {			
-			$db->save($cinema);
+			//se não tem o cinema no banco e ele ta OK entao grava, senao espera para quando tiver ok para gravar e notificar.
+			if ($cinema->status == 'OK') {
+				$db->save($cinema);
+				$cinema->updated = 'YES';				
+			} 
 		}
-		
+
 		if (!isset($cinema->updated)) {
 			//controle so de validacao 
 			$cinema->updated = 'NO';
 		}
-				
+
 		return $cinema;		
 	}
 

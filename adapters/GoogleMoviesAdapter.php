@@ -21,6 +21,11 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		$html = str_get_html($buffer);
 
 		$theater = $html->find('h2', 0)->plaintext;
+		
+		if (empty($theater)) {
+			throw new Exception('Nao encontrou dados para o cinema na url:' . $cinema_url);
+		}
+		
 		$address = $html->find('div[class="info"]',0)->plaintext;
 
 		$cinema = $this->get_cinema();

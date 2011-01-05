@@ -1,4 +1,5 @@
 <?php
+
 class Helper {
 
 	public static function starts_with($haystack, $needle, $case=false) {
@@ -6,64 +7,53 @@ class Helper {
 		return (strcasecmp(substr($haystack, 0, strlen($needle)),$needle)===0);
 	}
 	
-	public static function recursive_file_exists($filename, $directory) {
+	public static function recursive_file_exists($filename, $path) {
 		try {
-			/*** loop through the files in directory ***/
-			foreach(new recursiveIteratorIterator( new recursiveDirectoryIterator($directory)) as $file){
-				/*** if the file is found ***/
-				if( $directory.'/'.$filename == $file )	{
+			$dir_iterator = new RecursiveDirectoryIterator($path);
+			$iterator = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
+
+			foreach ($iterator as $file_on_disk) {
+				if (basename($file_on_disk) == $filename) {
 					return true;
 				}
 			}
-			/*** if the file is not found ***/
-			return false;
-		}	catch(Exception $e)	{
-			/*** if the directory does not exist or the directory
-			or a sub directory does not have sufficent
-			permissions return false ***/
-			return false;
-		}
-	}
-
-	public static function nicetime($date) {
-		if(empty($date)) {
-			return "No date provided";
-		}
-
-		$periods         = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-		$lengths         = array("60","60","24","7","4.35","12","10");
-
-		$now             = time();
-		$unix_date         = $date;
-
-		// check validity of date
-		if(empty($unix_date)) {    
-			return "Bad date";
-		}
-
-		// is it future date or past date
-		if($now > $unix_date) {    
-			$difference     = $now - $unix_date;
-			$tense         = "ago";
-
-		} else {
-			$difference     = $unix_date - $now;
-			$tense         = "from now";
-		}
-
-		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
-			$difference /= $lengths[$j];
-		}
-
-		$difference = round($difference);
-
-		if($difference != 1) {
-			$periods[$j].= "s";
-		}
-
-		return "$difference $periods[$j] {$tense}";
+			return false;					
+		} catch (Exception $e) {
+			return false;			
+		}		
 	}
 	
+	public static function get_file_list($path) {
+		$files = array();
+
+		try {
+			$dir_iterator = new RecursiveDirectoryIterator($path);
+			$iterator = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
+
+			foreach ($iterator as $file_on_disk) {
+				if (is_file($file_on_disk)) {
+					$files[] = basename($file_on_disk);
+				}
+			}
+			return $files; 
+		} catch (Exception $e) {
+			return;
+		}		
+	}
+
+	public static function elapsed_time($unixtime) {
+		$timeline = time()-$unixtime;
+		
+		$periods = array('hour' => 3600, 'minute' => 60, 'second' => 1);
+		$ret = '';
+		foreach($periods AS $name => $seconds){
+			$num = floor($timeline / $seconds);
+			$timeline -= ($num * $seconds);
+			$ret .= $num.' '.$name.(($num > 1) ? 's' : '').' ';
+		}
+
+		return trim($ret);
+	}
 
 	public static function clean_string($string, $length = -1, $separator = '-') {
 		// transliterate
