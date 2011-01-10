@@ -6,33 +6,7 @@ abstract class AbstractCinemaAdapter {
 	abstract protected function scrape();
 
 	abstract protected function get_cinema();
-
-	private function run(){
-		try {
-			$cinema = @$this->scrape();
-
-			if (count($cinema->movies) == 0) {
-				throw new Exception($cinema->name . ' não tem filmes');	
-			} elseif (empty($cinema->city)) {
-				throw new Exception($cinema->name . ' com endereço inválido ainda.');					
-			} else {
-				$cinema->status = 'OK';
-				$cinema->hash = md5(json_encode($cinema->movies));
-			}
-		} catch (Exception $e) {
-			$cinema->status = 'INVALID';
-			Log::write($e->getMessage(), ' - ');
-		}
-
-		$data = $this->register_on_db($cinema);
-
-		return $data;		
-	}
 	
-	public function get_json() {
-		return json_encode($this->run());
-	}
-
 	//Retorna a URL completa se um cinema foi atualizado. 
 	//Quem chama essa funcao vai guardar esse retorno para notificar os usuarios do servico
 	public function update(){
@@ -52,6 +26,32 @@ abstract class AbstractCinemaAdapter {
 
 			return $cinema;
 		}
+	}
+
+	private function run(){
+		try {
+			$cinema = @$this->scrape();
+
+			if (count($cinema->movies) == 0) {
+				throw new Exception($cinema->name . ' não tem filmes');	
+			} elseif (empty($cinema->city)) {
+				throw new Exception($cinema->name . ' com endereço inválido ainda.');					
+			} else {
+				$cinema->status = 'OK';
+				$cinema->hash = md5(json_encode($cinema->movies));
+			}
+		} catch (Exception $e) {
+			$cinema->status = 'INVALID';
+			Log::write($e->getMessage());
+		}
+
+		$data = $this->register_on_db($cinema);
+
+		return $data;		
+	}
+	
+	public function get_json() {
+		return json_encode($this->run());
 	}
 
 	public function print_json(){

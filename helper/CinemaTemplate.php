@@ -58,8 +58,8 @@ class CinemaTemplate{
 				
 				$path = $dir . $uf . '/' . Helper::clean_string($cinema->city);
 			}
-			$path = strtolower($path);
-			
+
+			$path = strtolower($path);	
 			$this->create_dir($path);
 			
 			$tpl =  Env::path('helper/CinemaClass.tpl');

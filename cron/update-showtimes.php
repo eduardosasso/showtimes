@@ -10,10 +10,6 @@ if (Env::is_http_req()) {
 }
 
 function update_showtimes(){
-	// $db = DatabaseFactory::get_provider();
-	// 
-	// $cinemas = $db->get_cinemas();
-	
 	$start = microtime(true);
 	
 	$path = Env::path() . 'cinema/br';
@@ -51,8 +47,6 @@ function update_showtimes(){
 	Sendmail::to_admin(count($erros) . " erros atualizando cinemas", $erros);	
 	
 	$total = Helper::elapsed_time($start);
-	
-	echo $classname . "\n";
 	
 	Log::write("Tempo total atualizando cinemas: $total");	
 }

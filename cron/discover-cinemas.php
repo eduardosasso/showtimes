@@ -1,17 +1,17 @@
 <?php
-include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
-
 set_time_limit(0);
+
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
+
 //se o acesso é via web/curl pressupoe q é pelo cron entao roda...
 if (Env::is_http_req()) {
 	find_cinemas_brazil();
 }
-
 
 //cria ou atualiza cinemas de todo brazil
 function find_cinemas_brazil(){
