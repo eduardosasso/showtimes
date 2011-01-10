@@ -38,7 +38,11 @@ abstract class AbstractCinemaAdapter {
 				throw new Exception($cinema->name . ' com endereço inválido ainda.');					
 			} else {
 				$cinema->status = 'OK';
-				$cinema->hash = md5(json_encode($cinema->movies));
+				
+				//ordena os filmes por nome para garantir fidelidade na comparacao com o hash...
+				$movies_sorted = $cinema->movies;
+				usort($movies_sorted,'sort_by_name');
+				$cinema->hash = md5(json_encode($movies_sorted));
 			}
 		} catch (Exception $e) {
 			$cinema->status = 'INVALID';
@@ -103,6 +107,12 @@ abstract class AbstractCinemaAdapter {
 
 		return $cinema;		
 	}
+
+	private function sort_by_name($a, $b) { 
+	  if(  $a->name == $b->name ){ return 0 ; } 
+	  return ($a->name < $b->name) ? -1 : 1;
+	}
+
 
 }	
 

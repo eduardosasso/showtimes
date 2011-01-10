@@ -6,9 +6,28 @@ error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
+function sort_by_name($a, $b) { 
+  if(  $a->name == $b->name ){ return 0 ; } 
+  return ($a->name < $b->name) ? -1 : 1;
+}
 
 //phpunit test/BasicTest.php
 class BasicTest extends PHPUnit_Framework_TestCase {
+	
+	
+	
+	function test_order_movies(){
+		$url = "http://showtimes.dev/cinema/mg/juiz-de-fora/uci_kinoplex_independencia/";
+		$buffer = Helper::http_req($url);
+		$cinema = json_decode($buffer);
+		
+		$movies = $cinema->movies;
+		usort($movies,'sort_by_name');
+		
+		echo "<pre>";
+		print_r($movies);
+		echo "</pre>";
+	}
 	
 	function xtest_dir() {
 		$filename = "patio_brasil.php";
@@ -27,7 +46,7 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		$x =str_replace(Env::path(), "", $file);
 		echo $x;
 	}
-	function test_clean_database(){
+	function xtest_clean_database(){
 		$db = DatabaseFactory::get_provider();
 
 		$db->clean_database();
