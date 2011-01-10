@@ -16,13 +16,13 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 	
 	
 	
-	function test_order_movies(){
+	function xtest_order_movies(){
 		$url = "http://showtimes.dev/cinema/mg/juiz-de-fora/uci_kinoplex_independencia/";
 		$buffer = Helper::http_req($url);
 		$cinema = json_decode($buffer);
 		
 		$movies = $cinema->movies;
-		usort($movies,'sort_by_name');
+		usort($movies,'Helper::sort_by_name');
 		
 		echo "<pre>";
 		print_r($movies);
@@ -46,7 +46,7 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 		$x =str_replace(Env::path(), "", $file);
 		echo $x;
 	}
-	function xtest_clean_database(){
+	function test_clean_database(){
 		$db = DatabaseFactory::get_provider();
 
 		$db->clean_database();

@@ -170,6 +170,12 @@ class Helper {
 	public static function unescape_special_char($id) {
 		return str_replace('/_' , '_', $id);
 	}
+	
+	public static function sort_by_name($a, $b) { 
+	  if(  $a->name == $b->name ){ return 0 ; } 
+	  return ($a->name < $b->name) ? -1 : 1;
+	}
+	
 
 }
 

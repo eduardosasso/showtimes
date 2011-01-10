@@ -25,7 +25,7 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		$theater = $html->find('h2', 0)->plaintext;
 		
 		if (empty($theater)) {
-			Log::write('Nao encontrou dados para o cinema na url:' . $cinema_url);
+			//Log::write('Nao encontrou dados para o cinema na url:' . $cinema_url);
 			return $cinema;			
 		}
 		

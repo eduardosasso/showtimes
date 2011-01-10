@@ -41,11 +41,12 @@ abstract class AbstractCinemaAdapter {
 				
 				//ordena os filmes por nome para garantir fidelidade na comparacao com o hash...
 				$movies_sorted = $cinema->movies;
-				usort($movies_sorted,'sort_by_name');
+				usort($movies_sorted,'Helper::sort_by_name');
 				$cinema->hash = md5(json_encode($movies_sorted));
 			}
 		} catch (Exception $e) {
 			$cinema->status = 'INVALID';
+
 			Log::write($e->getMessage());
 		}
 
@@ -107,12 +108,6 @@ abstract class AbstractCinemaAdapter {
 
 		return $cinema;		
 	}
-
-	private function sort_by_name($a, $b) { 
-	  if(  $a->name == $b->name ){ return 0 ; } 
-	  return ($a->name < $b->name) ? -1 : 1;
-	}
-
 
 }	
 

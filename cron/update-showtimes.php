@@ -16,6 +16,7 @@ function update_showtimes(){
 	$cinemas = Helper::get_file_list($path);
 
 	$updated = array();
+	$invalid = array();
 	
 	$erros = array();
 
@@ -29,6 +30,10 @@ function update_showtimes(){
 
 				if (!empty($cinema)) {
 					$updated[] = $cinema;
+					
+					if ($cinema->status == 'INVALID') {
+						$invalid[] = $cinema;
+					}
 				}
 	
 			}			
@@ -43,6 +48,8 @@ function update_showtimes(){
 		
 		Sendmail::to_admin(count($updated) . " cinemas atualizados", $updated);			
 	}
+	
+	Sendmail::to_admin(count($invalid) . " cinemas invalidos", $invalid);
 	
 	Sendmail::to_admin(count($erros) . " erros atualizando cinemas", $erros);	
 	
