@@ -29,6 +29,9 @@ Cron
 curl http://showtimes.dev/cron/discover-cinemas.php
 curl http://showtimes.dev/cron/update-showtimes.php
 
+curl http://173.255.199.136/cron/discover-cinemas.php
+curl http://173.255.199.136/cron/update-showtimes.php
+
 PHP
 ---
 Colocar memory_limit alto 

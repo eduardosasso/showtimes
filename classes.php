@@ -1,4 +1,5 @@
 <?php
+	date_default_timezone_set("America/Sao_Paulo");
 
 	// Faz o loading dinamico de todas as classes que o sistema precisa.
 	// Para utilizar eh so colocar o include abaixo em cada arquivo php

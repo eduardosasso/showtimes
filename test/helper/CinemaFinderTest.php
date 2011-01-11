@@ -1,17 +1,22 @@
 <?php 
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
-include realpath($_SERVER["DOCUMENT_ROOT"]) . '/update-showtimes.php';
-include realpath($_SERVER["DOCUMENT_ROOT"]) . '/discover-cinemas.php';
 
 //phpunit test/helper/CinemaFinderTest.php
 class CinemaFinderTest extends PHPUnit_Framework_TestCase {
-	public function test_update(){
-		
-		
-	}
-	
 
-	public function xxtest_find() {
+	public function test_find() {
+		// $cinema_finder = new CinemaFinder('br','SP', array('Bauru'));
+		// $cinemas =  $cinema_finder->get_all_cinemas();
+		$dir = Env::path("cinema/br/");
+		
+		echo $dir;
+		if (Helper::recursive_file_exists('cine_araujo_bauru.php', $dir)) {
+			echo "existe";
+		} 
+		
+		// echo "<pre>";
+		// print_r($cinemas);
+		// echo "</pre>";
 
 		//1. gera cinemas por todo o brasil com fallback para o google
 		//

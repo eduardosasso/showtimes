@@ -50,12 +50,12 @@ class Env {
 		}
 		
 		$path = '/Users/eduardosasso/Dropbox/showtimes/';
-		if (Env::is() == Env::PROD) {
+		if ($_ENV['USER'] == 'root') {
+			//teste meio tosco so pra identificar que esta no ambiente de producao
 			$path = '/www/showtimes/';
 		} 
 		
-		return $path . $dir;	
-		
+		return $path . $dir;		
 	}
 	
 	public static function smtp(){

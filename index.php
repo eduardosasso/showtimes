@@ -8,3 +8,10 @@
 	<h1>Showtimes API</h1>
 </body>
 </html>
+<?php
+include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
+
+Log::write('ácentuação');
+echo phpinfo();
+
+?>
