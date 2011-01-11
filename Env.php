@@ -50,7 +50,7 @@ class Env {
 		}
 		
 		$path = '/Users/eduardosasso/Dropbox/showtimes/';
-		if ($_ENV['USER'] == 'root') {
+		if ($_ENV['USER'] != 'eduardosasso') {
 			//teste meio tosco so pra identificar que esta no ambiente de producao
 			$path = '/www/showtimes/';
 		} 
