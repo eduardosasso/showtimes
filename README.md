@@ -32,3 +32,8 @@ curl http://showtimes.dev/cron/update-showtimes.php
 PHP
 ---
 Colocar memory_limit alto 
+
+CouchDB Local
+-------------
+./couchdb-tunnel.pl start
+http://localhost:5985/_utils/index.html

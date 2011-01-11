@@ -2,7 +2,7 @@
 
 class Env {
 	const LOCAL = 'showtimes.dev';
-	const PROD = 'showtimes.refilmagem.com.br';
+	const PROD = '173.255.199.136';
 	const DEV = 'showtimes.refilmagem.com.br:9999';	
 	const URL_PATH = '/cinema/';	
 	
@@ -51,7 +51,7 @@ class Env {
 		
 		$path = '/Users/eduardosasso/Dropbox/showtimes/';
 		if (Env::is() == Env::PROD) {
-			$path = '/www/showtimes.refilmagem.com.br/html/';
+			$path = '/www/showtimes/';
 		} 
 		
 		return $path . $dir;	
