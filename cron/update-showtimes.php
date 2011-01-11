@@ -6,11 +6,7 @@ set_time_limit(0);
 //testa se o acesso veio atraves de requisicao web/curl se sim roda a atualizacao...
 //senao é pq deve ser teste via phpunit ou alguma chamada direta
 if (Env::is_http_req()) {
-	//update_showtimes();
-	echo "<pre>";
-	print_r($_ENV);
-	echo "</pre>";
-	
+	update_showtimes();
 }
 
 function update_showtimes(){
