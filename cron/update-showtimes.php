@@ -13,6 +13,7 @@ function update_showtimes(){
 	$start = microtime(true);
 	
 	$path = Env::path() . 'cinema/br';
+	
 	$cinemas = Helper::get_file_list($path);
 
 	$updated = array();
