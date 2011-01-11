@@ -40,3 +40,27 @@ CouchDB Local
 -------------
 ./couchdb-tunnel.pl start
 http://localhost:5985/_utils/index.html
+
+CouchDB Views
+-------------
+* cinemas/cinemas 
+function(doc) {
+if (doc.movies)
+  emit(doc._id, doc);
+}
+
+* subscribers/subscribers
+function(doc) {
+if (doc.callback)
+  emit(doc._id, doc);
+}
+
+Estrutura de um Subscriber
+--------------------------
+{
+   "_id": "refilmagem",
+   "_rev": "4-80453c1f40cd99b57daaaeadb734e4ff",
+   "name": "Refilmagem",
+   "email": "eduardo@refilmagem.com.br",
+   "callback": "http://refilmagem.dev/config/update-showtimes"
+}
