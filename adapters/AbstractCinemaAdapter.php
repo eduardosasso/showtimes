@@ -94,8 +94,8 @@ abstract class AbstractCinemaAdapter {
 			}			
 		} else {			
 			$cinema->updated = 'YES';
-			//se não tem o cinema no banco e ele ta OK entao grava, senao espera para quando tiver ok para gravar e notificar.
 			if ($cinema->status == 'OK') {
+				//se não tem o cinema no banco e ele ta OK entao grava, senao espera para quando tiver ok.
 				//se é a primeira vez e esta ok vai pro banco
 				$db->save($cinema);				
 			} 
