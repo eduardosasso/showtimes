@@ -46,7 +46,8 @@ abstract class AbstractCinemaAdapter {
 			}
 		} catch (Exception $e) {
 			$cinema->status = 'INVALID';
-
+			$cinema->hash = md5(time());
+			
 			Log::write($e->getMessage());
 		}
 
@@ -74,7 +75,7 @@ abstract class AbstractCinemaAdapter {
 		$cinema->_id = $classname;		
 
 		$db = DatabaseFactory::get_provider();
-
+ 
 		$cinema_db = $db->find($classname);
 
 		if ($cinema_db) {
@@ -93,12 +94,8 @@ abstract class AbstractCinemaAdapter {
 				//Log::write($cinema->name . ' tem novidades');
 			}			
 		} else {			
+			$db->save($cinema);				
 			$cinema->updated = 'YES';
-			if ($cinema->status == 'OK') {
-				//se não tem o cinema no banco e ele ta OK entao grava, senao espera para quando tiver ok.
-				//se é a primeira vez e esta ok vai pro banco
-				$db->save($cinema);				
-			} 
 		}
 
 		if (!isset($cinema->updated)) {
