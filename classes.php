@@ -16,6 +16,7 @@
 	require_once("$root/helper/Sendmail.php");
 
 	require_once("$root/includes/simple_html_dom.php");
+	require_once("$root/includes/querypath/QueryPath.php");
 	
 	// //se o ambiente é local sempre mostra erros na tela
 	// 	if (Settings::get_env() == Settings::LOCAL) {

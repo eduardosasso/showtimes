@@ -10,7 +10,7 @@ class Movie {
 	public $showtimes = array(); 
 	
 	function set_showtime($showtime) {
-		$this->showtimes[] = $showtime;
+		$this->showtimes[] = trim($showtime);
 	}
 }
 ?>

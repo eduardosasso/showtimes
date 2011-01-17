@@ -3,70 +3,39 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
 abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 	abstract protected function get_url();
-
-	public function scrape() {		
+	
+	public function scrape(){
 		$cinema_url = $this->get_url();
 		
 		$cinema = $this->get_cinema();
-
-		$curl_handle=curl_init();
-
-		curl_setopt($curl_handle,CURLOPT_URL,$cinema_url);
-		curl_setopt ($curl_handle, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; FreeBSDi386; en-US; rv:1.2a) Gecko/20021021");
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER, array('Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7'));
-		curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,0);
-		curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);  
-		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
-		$buffer = curl_exec($curl_handle);
-		curl_close($curl_handle);
 		
-		if (empty($buffer)) {
-				Sendmail::to_admin("Curl retornou vazio", $cinema_url);	
-		}
-
-		$html = str_get_html($buffer);
+		$html = htmlqp($cinema_url);
 		
-		if (empty($html)) {
-				Sendmail::to_admin("Parser HTML retornou vazio", $cinema_url);	
-		}
-
-		$theater = $html->find('h2', 0)->plaintext;
-
-		if (empty($theater)) {
-			Log::write('Erro no cinema:' . $cinema_url);
-			return $cinema;			
-		}
+		$theater = $html->find('h2')->text();
 		
-		$address = $html->find('div[class="info"]',0)->plaintext;
+		$address = $html->top()->find('div.info',0)->text();
 		
-		foreach($html->find('.movie') as $movie) {
+		foreach($html->top()->find('.movie') as $movie) {
 			$filme = new Movie();
-
-			$filme->name = $movie->find('.name a',0)->plaintext;
 			
-			$meta = $movie->find('.info',0)->plaintext;
+			$filme->name = $movie->children('.name a')->text();
+			
+			$meta = $movie->parent()->children('.info')->text();
 			
 			$this->set_movie_meta($meta, $filme);
-			
-			/*
-				TODO esse loop tem q levar em consideracao filmes com ou sem link de horarios... BUG critico
-			*/
-			
-			$showtimes = $movie->find('.times',0)->plaintext;
-			//$filme->set_showtime($showtimes);
-			$showtimes = explode("&nbsp; ", $showtimes);
+
+			$showtimes = $movie->parent()->find('.times')->text();
+
+			$showtimes = explode("&Acirc;&nbsp;", htmlentities($showtimes));
 			foreach($showtimes as $showtime) {
 				$filme->set_showtime($showtime);
 			}	
 
 			$cinema->set_movie($filme);
+			
 		}
-
-		$html->clear();
-		unset($html);
-
 		return $cinema;
-	}	
+	}
 	
 	private function set_movie_meta($meta, $filme) {
 		//limpa special chars ocultos
@@ -91,7 +60,7 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		array_pop($meta);
 		
 			
-		$lingua = ereg_replace("[^A-Za-z0-9]", "", $lingua); 		
+		$lingua = preg_replace("[^A-Za-z0-9]", "", $lingua); 		
 		$filme->subtitle = trim($lingua);
 		$filme->genre = trim($genero);
 		$filme->age = trim($idade);
