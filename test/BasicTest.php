@@ -14,7 +14,37 @@ function sort_by_name($a, $b) {
 //phpunit test/BasicTest.php
 class BasicTest extends PHPUnit_Framework_TestCase {
 	
-	
+	function xtest_callback(){
+		$ch = curl_init();
+		$url = "http://refilmagem.com.br:8080/config/update-showtimes";
+		$data ="axxx";
+		
+		//se a url vier com porta quebra ela para a chamada no curl
+		$url_parts = parse_url($url);	
+		if (isset($url_parts['port'])) {
+			$port = $url_parts['port'];
+
+			$urlx = str_replace(":$port", "", $url);
+			
+			//echo "$urlx";
+
+			curl_setopt($ch,CURLOPT_URL,$urlx);
+			curl_setopt($ch,CURLOPT_PORT,$port);
+
+		} else {
+			curl_setopt($ch,CURLOPT_URL,$url);
+		}
+
+		curl_setopt($ch,CURLOPT_POST,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array('data'=>$data));
+
+		//execute post
+		$result = curl_exec($ch);
+
+		//close connection
+		curl_close($ch);		
+		
+	}
 	
 	function xtest_order_movies(){
 		$url = "http://showtimes.dev/cinema/mg/juiz-de-fora/uci_kinoplex_independencia/";

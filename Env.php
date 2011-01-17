@@ -49,10 +49,10 @@ class Env {
 			$dir = substr($dir, 1);
 		}
 		
-		$path = '/Users/eduardosasso/Dropbox/showtimes/';
-		if ($_ENV['USER'] != 'eduardosasso') {
+		$path = '/www/showtimes/';
+		if (isset($_ENV['USER']) && $_ENV['USER'] == 'eduardosasso') {
 			//teste meio tosco so pra identificar que esta no ambiente de producao
-			$path = '/www/showtimes/';
+			$path = '/Users/eduardosasso/Dropbox/showtimes/';			
 		} 
 		
 		return $path . $dir;		

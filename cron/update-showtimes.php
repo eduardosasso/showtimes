@@ -15,7 +15,7 @@ function update_showtimes(){
 	$path = Env::path() . 'cinema/br';
 	
 	$cinemas = Helper::get_file_list($path);
-
+	
 	$updated = array();
 	$invalid = array();
 	
@@ -79,9 +79,21 @@ function post_request($url, $data) {
 		TODO faz essa requisicao para todos os clientes registrados com callback
 	*/
 	$ch = curl_init();
+	
+	//se a url vier com porta quebra ela para a chamada no curl
+	$url_parts = parse_url($url);	
+	if (isset($url_parts['port'])) {
+		$port = $url_parts['port'];
+		
+		$urlx = str_replace(":$port", "", $url);
+				
+		curl_setopt($ch,CURLOPT_URL,$urlx);
+		curl_setopt($ch,CURLOPT_PORT,$port);
 
-	//set the url, number of POST vars, POST data
-	curl_setopt($ch,CURLOPT_URL,$url);
+	} else {
+		curl_setopt($ch,CURLOPT_URL,$url);
+	}
+
 	curl_setopt($ch,CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, array('data'=>$data));
 

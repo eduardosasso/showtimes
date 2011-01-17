@@ -83,7 +83,7 @@ abstract class AbstractCinemaAdapter {
 				$cinema->_rev = $cinema_db->_rev;
 
 				//utilizado mais para ter uma nocao olhando direto no banco...
-				$cinema->updated = date('d/m/y H:i:s');
+				$cinema->last_update = date('d/m/y H:i:s');
 
 				$db->save($cinema);
 
@@ -94,7 +94,8 @@ abstract class AbstractCinemaAdapter {
 				//Log::write($cinema->name . ' tem novidades');
 			}			
 		} else {			
-			$db->save($cinema);				
+			$cinema->last_update = date('d/m/y H:i:s');
+			$db->save($cinema);			
 			$cinema->updated = 'YES';
 		}
 

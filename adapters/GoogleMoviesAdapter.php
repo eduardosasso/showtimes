@@ -14,18 +14,26 @@ abstract class GoogleMoviesAdapter extends AbstractCinemaAdapter{
 		curl_setopt($curl_handle,CURLOPT_URL,$cinema_url);
 		curl_setopt ($curl_handle, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; FreeBSDi386; en-US; rv:1.2a) Gecko/20021021");
 		curl_setopt($curl_handle, CURLOPT_HTTPHEADER, array('Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7'));
-		// curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
+		curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,0);
 		curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);  
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
 		$buffer = curl_exec($curl_handle);
 		curl_close($curl_handle);
+		
+		if (empty($buffer)) {
+				Sendmail::to_admin("Curl retornou vazio", $cinema_url);	
+		}
 
 		$html = str_get_html($buffer);
+		
+		if (empty($html)) {
+				Sendmail::to_admin("Parser HTML retornou vazio", $cinema_url);	
+		}
 
 		$theater = $html->find('h2', 0)->plaintext;
-		
+
 		if (empty($theater)) {
-			//Log::write('Nao encontrou dados para o cinema na url:' . $cinema_url);
+			Log::write('Erro no cinema:' . $cinema_url);
 			return $cinema;			
 		}
 		
