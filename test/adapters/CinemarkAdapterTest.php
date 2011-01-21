@@ -5,8 +5,8 @@ include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 class CinemarkAdapterTest extends PHPUnit_Framework_TestCase {
 	
 	function test_all(){
-		//$cinemark = new cinemark_bourbon_ipiranga();
-		$cinemark = new cinemark_barra_sul();
+		$cinemark = new cinemark_bourbon_ipiranga();
+		//$cinemark = new cinemark_cidade_jardim();
 		$cinema = $cinemark->scrape();
 		
 		echo "<pre>";
