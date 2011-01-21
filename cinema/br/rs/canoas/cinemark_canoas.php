@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_canoas extends GoogleMoviesAdapter {
+class cinemark_canoas extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,9 +18,11 @@ class cinemark_canoas extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Alvorada+RS&tid=c70aefdeb5d47367";
+	protected function get_id_cidade_do_site() {
+		return "12";
 	}
-
+	protected function get_id_cinema_do_site() {
+		return "693";
+	}
 }
 ?>
