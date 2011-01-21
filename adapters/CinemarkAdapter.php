@@ -61,6 +61,7 @@ abstract class CinemarkAdapter extends AbstractCinemaAdapter {
 						//recupera a legenda que identifica o dia que o filme vai passar ou não.
 						$excecao_horario = pq('span:gt('. $key . '):first', pq($value)->parent())->attr('onmouseover'); 						
 						if ($this->tem_sessao_hoje($excecao_horario)) {
+							$horario = str_replace("h",":", $horario);
 							$filme->set_showtime($horario);
 						}						
 					}		
@@ -81,8 +82,8 @@ abstract class CinemarkAdapter extends AbstractCinemaAdapter {
 		if ($matches) {
 			$id_excecao = $matches[2];
 			
-			//$hoje = DateTime::createFromFormat('d/m', date("d/m"));
-			$hoje = DateTime::createFromFormat('d/m', "20/01");
+			$hoje = DateTime::createFromFormat('d/m', date("d/m"));
+			//$hoje = DateTime::createFromFormat('d/m', "23/01");
 			
 			foreach ($this->excecoes as $key => $value) {
 				//procura para encontrar o tipo da legenda baseado no codigo legenda_X para depois identificar a excecao
