@@ -96,20 +96,26 @@ abstract class CinemarkAdapter extends AbstractCinemaAdapter {
 					//identifica as datas no formato dia/mes
 					preg_match_all("/(\d{1,2}\/\d{1,2})/", $texto, $datas);
 					
-					$nao_eh_para_exibir = preg_match("/NÃO/", $texto);
+					$nao_eh_para_exibir = preg_match("/N.*O/", $texto, $x);
+					
+					$exibir_somente = preg_match("/SOMENTE/", $texto);
+					$excecao_eh_hoje = false;
 					
 					foreach ($datas[0] as $key => $value) {
 						$data = DateTime::createFromFormat('d/m', $value);
 						if ($data == $hoje) {
-							if ($nao_eh_para_exibir) {
-								return false;
-							}
-							//eh pra exibir no dia
-							return true;
+							 $excecao_eh_hoje = true;
 						} 
 					}
-					//se nas datas acima não bateu é pq não é pra mostrar	
-					return false;	
+					
+					if ($nao_eh_para_exibir && $excecao_eh_hoje) {
+						return false;
+					}
+					
+					if ($exibir_somente) {
+						if ($excecao_eh_hoje) return true; 
+						return false;
+					}
 				}
 			}
 		}
