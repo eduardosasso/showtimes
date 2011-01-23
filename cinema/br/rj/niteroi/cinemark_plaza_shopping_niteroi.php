@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_plaza_shopping_niteroi extends GoogleMoviesAdapter {
+class cinemark_plaza_shopping_niteroi extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_plaza_shopping_niteroi extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Itabora%C3%AD+RJ&tid=3094b5588c38dee5";
+	protected function get_id_cidade_do_site() {
+		return "20";
+	}
+	protected function get_id_cinema_do_site() {
+		return "691";
 	}
 
 }

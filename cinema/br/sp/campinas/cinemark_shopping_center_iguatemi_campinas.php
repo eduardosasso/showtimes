@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_shopping_center_iguatemi_campinas extends GoogleMoviesAdapter {
+class cinemark_shopping_center_iguatemi_campinas extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_shopping_center_iguatemi_campinas extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Americana+SP&tid=8f876c5773a0c0fe";
+	protected function get_id_cidade_do_site() {
+		return "16";
+	}
+	protected function get_id_cinema_do_site() {
+		return "725";
 	}
 
 }

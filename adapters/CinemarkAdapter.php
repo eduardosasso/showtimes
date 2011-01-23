@@ -35,7 +35,7 @@ abstract class CinemarkAdapter extends AbstractCinemaAdapter {
 
 			$prog = pq('#prog_hora_meio');
 			
-			$filmes = pq('div.a ,div.b, div.premiere', $prog);
+			$filmes = pq('div.a ,div.b, div.premiere, div.xd', $prog);
 
 			foreach ($filmes as $key => $value) {
 				$filme = new Movie();

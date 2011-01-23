@@ -1,25 +1,28 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_sao_jose_dos_pinhais extends GoogleMoviesAdapter {
+class cinemark_sao_jose_dos_pinhais extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
 		$cinema->id = "96f33ae75d10fb6b";
 		$cinema->name = "Cinemark São José dos Pinhais";
-		$cinema->address = "R. Voluntários da Pátria, 170 - Centro, São José dos Pinhais - Paraná, 83005-020, Brazil";
+		$cinema->address = "R. Izabel A Redentora, 1434 - Centro, São José dos Pinhais - Paraná, 83005-010, Brazil";
 		$cinema->phone = "";
 		$cinema->state = "Parana";
 		$cinema->state_code = "PR";
 		$cinema->city = "São José dos Pinhais";
-		$cinema->lat = "-25.5386125";
-		$cinema->long = "-49.2051404";
+		$cinema->lat = "-25.5374251";
+		$cinema->long = "-49.2045423";
 
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Almirante+Tamandar%C3%A9+PR&tid=96f33ae75d10fb6b";
+	protected function get_id_cidade_do_site() {
+		return "28";
+	}
+	protected function get_id_cinema_do_site() {
+		return "894";
 	}
 
 }

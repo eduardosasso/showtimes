@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_barigui extends GoogleMoviesAdapter {
+class cinemark_barigui extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_barigui extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Almirante+Tamandar%C3%A9+PR&tid=1049e1132df20f72";
+	protected function get_id_cidade_do_site() {
+		return "18";
+	}
+	protected function get_id_cinema_do_site() {
+		return "700";
 	}
 
 }

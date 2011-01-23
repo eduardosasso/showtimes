@@ -36,10 +36,10 @@
 		$db = DatabaseFactory::get_provider();
 		$data = $db->find($classname);
 		
-		// if ($data) {
-		// 	Helper::print_json($data);			
-		// 	return;			
-		// }
+		if ($data) {
+			Helper::print_json($data);			
+			return;			
+		}
 		
 		$object = new $classname;
 		$object->print_json();

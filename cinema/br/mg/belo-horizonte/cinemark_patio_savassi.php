@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_patio_savassi extends GoogleMoviesAdapter {
+class cinemark_patio_savassi extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_patio_savassi extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Belo+Horizonte+MG&tid=cc9f86d3a73b93b2";
+	protected function get_id_cidade_do_site() {
+		return "21";
+	}
+	protected function get_id_cinema_do_site() {
+		return "697";
 	}
 
 }

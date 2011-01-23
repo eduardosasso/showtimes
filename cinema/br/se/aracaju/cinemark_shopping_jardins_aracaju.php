@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_shopping_jardins_aracaju extends GoogleMoviesAdapter {
+class cinemark_shopping_jardins_aracaju extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_shopping_jardins_aracaju extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Aracaju+SE&tid=470b626d068b5944";
+	protected function get_id_cidade_do_site() {
+		return "10";
+	}
+	protected function get_id_cinema_do_site() {
+		return "706";
 	}
 
 }

@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_colinas extends GoogleMoviesAdapter {
+class cinemark_colinas extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_colinas extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Ca%C3%A7apava+SP&tid=44bd153f9dc05fc";
+	protected function get_id_cidade_do_site() {
+		return "5";
+	}
+	protected function get_id_cinema_do_site() {
+		return "712";
 	}
 
 }

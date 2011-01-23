@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_santa_cruz extends GoogleMoviesAdapter {
+class cinemark_santa_cruz extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,9 +18,11 @@ class cinemark_santa_cruz extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Cubat%C3%A3o+SP&tid=727627cf9d0ef2e9";
+	protected function get_id_cidade_do_site() {
+		return "1";
 	}
-
+	protected function get_id_cinema_do_site() {
+		return "684";
+	}
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_tambore extends GoogleMoviesAdapter {
+class cinemark_tambore extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_tambore extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Ara%C3%A7ariguama+SP&tid=e71b3b5671494a76";
+	protected function get_id_cidade_do_site() {
+		return "4";
+	}
+	protected function get_id_cinema_do_site() {
+		return "717";
 	}
 
 }

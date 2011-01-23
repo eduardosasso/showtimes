@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_praia_mar_shopping extends GoogleMoviesAdapter {
+class cinemark_praia_mar_shopping extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_praia_mar_shopping extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Bertioga+SP&tid=3b9f681ea787616f";
+	protected function get_id_cidade_do_site() {
+		return "8";
+	}
+	protected function get_id_cinema_do_site() {
+		return "709";
 	}
 
 }

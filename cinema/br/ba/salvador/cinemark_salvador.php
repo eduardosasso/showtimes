@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_salvador extends GoogleMoviesAdapter {
+class cinemark_salvador extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_salvador extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Cama%C3%A7ari+BA&tid=6732fc99d44c68fd";
+	protected function get_id_cidade_do_site() {
+		return "26";
+	}
+	protected function get_id_cinema_do_site() {
+		return "785";
 	}
 
 }

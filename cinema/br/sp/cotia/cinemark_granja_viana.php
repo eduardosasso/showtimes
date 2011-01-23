@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_granja_viana extends GoogleMoviesAdapter {
+class cinemark_granja_viana extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_granja_viana extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Alum%C3%ADnio+SP&tid=9708d3d71a2ec6a2";
+	protected function get_id_cidade_do_site() {
+		return "30";
+	}
+	protected function get_id_cinema_do_site() {
+		return "663";
 	}
 
 }

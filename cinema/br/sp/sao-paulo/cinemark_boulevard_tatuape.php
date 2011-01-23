@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_boulevard_tatuape extends GoogleMoviesAdapter {
+class cinemark_boulevard_tatuape extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_boulevard_tatuape extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Aruj%C3%A1+SP&tid=dec1a668e30d5a19";
+	protected function get_id_cidade_do_site() {
+		return "1";
+	}
+	protected function get_id_cinema_do_site() {
+		return "690";
 	}
 
 }

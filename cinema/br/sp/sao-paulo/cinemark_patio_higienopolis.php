@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_patio_higienopolis extends GoogleMoviesAdapter {
+class cinemark_patio_higienopolis extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_patio_higienopolis extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Caieiras+SP&tid=9ae081e9a938cd3f";
+	protected function get_id_cidade_do_site() {
+		return "1";
+	}
+	protected function get_id_cinema_do_site() {
+		return "721";
 	}
 
 }

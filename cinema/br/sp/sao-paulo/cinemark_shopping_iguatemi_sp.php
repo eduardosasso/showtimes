@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_shopping_iguatemi_sp extends GoogleMoviesAdapter {
+class cinemark_shopping_iguatemi_sp extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,9 +18,11 @@ class cinemark_shopping_iguatemi_sp extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Barueri+SP&tid=f3e5ba6aca61d544";
+	protected function get_id_cidade_do_site() {
+		return "1";
 	}
-
+	protected function get_id_cinema_do_site() {
+		return "707";
+	}
 }
 ?>

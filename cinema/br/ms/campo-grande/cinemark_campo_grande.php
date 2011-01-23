@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_campo_grande extends GoogleMoviesAdapter {
+class cinemark_campo_grande extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_campo_grande extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Campo+Grande+MS&tid=28f0db853a06a277";
+	protected function get_id_cidade_do_site() {
+		return "13";
+	}
+	protected function get_id_cinema_do_site() {
+		return "694";
 	}
 
 }

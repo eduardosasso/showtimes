@@ -1,7 +1,7 @@
 <?php
 include realpath($_SERVER["DOCUMENT_ROOT"]) . '/classes.php';
 
-class cinemark_paulista extends GoogleMoviesAdapter {
+class cinemark_paulista extends CinemarkAdapter {
 
 	public function get_cinema() {
 		$cinema = new Cinema();
@@ -18,8 +18,11 @@ class cinemark_paulista extends GoogleMoviesAdapter {
 		return $cinema;			
 	}
 
-	public function get_url() {
-		return "http://google.com.br/movies?near=Diadema+SP&tid=6ef991cbe1550c6f";
+	protected function get_id_cidade_do_site() {
+		return "1";
+	}
+	protected function get_id_cinema_do_site() {
+		return "723";
 	}
 
 }
